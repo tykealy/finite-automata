@@ -1,10 +1,11 @@
 import Image from "next/image";
 import cadt from "./../../public/cadt.png";
+import Link from "next/link";
 const Topbar = () => {
   return (
     <div className=" flex overflow-hidden bg-gray-100 px-6 py-2.5 sm:px-3.5 md:px-7 ">
       <div className="w-64 sm:w-96">
-        <Image src={cadt}></Image>
+        <Image src={cadt} alt="cadt-logo"></Image>
       </div>
       <div className="flex flex-1 justify-end">
         <button
@@ -12,9 +13,13 @@ const Topbar = () => {
           className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
           style={{ color: "#182c4c" }}
         >
-          <span className="font-bold border border-grey-50 rounded-md border-[2px] p-1 sm:p-3">
+          <Link
+            target="blank"
+            href="https://github.com/tykeaboyloy/finite-automata"
+            className="font-bold border border-grey-50 rounded-md border-[2px] p-1 sm:p-3"
+          >
             Our Team
-          </span>
+          </Link>
         </button>
       </div>
     </div>
