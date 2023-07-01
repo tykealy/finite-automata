@@ -6,10 +6,14 @@ import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import { getFirestore, updateDoc, doc } from "firebase/firestore";
 
 export async function update() {
+  // get the id from the url
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id");
+  console.log(id);
   const firestore = getFirestore();
-  const testing = doc(firestore, "FA/1");
+  const testing = doc(firestore, "FA/" + id);
   const doc1 = {
-    title: "NFA",
+    title: "Fck u, Vaneath",
   };
   updateDoc(testing, doc1);
   alert("Change saved to firebase");
@@ -31,7 +35,7 @@ const Page = () => {
           </span>
           <span
             onClick={update}
-            className="text-white bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c]"
+            className="text-white bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] cursor-pointer"
           >
             SAVE
           </span>
