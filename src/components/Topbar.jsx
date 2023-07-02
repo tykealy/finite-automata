@@ -15,6 +15,7 @@ const Topbar = () => {
         >
           <Link
             target="blank"
+            as=""
             href="https://github.com/tykeaboyloy/finite-automata"
             className="font-bold border border-grey-50 rounded-md border-[2px] p-1 sm:p-3 hover:bg-[#182c4c] hover:text-white"
           >
