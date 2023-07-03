@@ -5,6 +5,7 @@ import React from "react";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import MultipleSelection from "@/components/MultipleSelection";
+import SingleSelection from "@/components/SingleSelection";
 export async function createFA(name) {
   const firestore = getFirestore();
   const c = collection(firestore, "automata");
@@ -23,6 +24,16 @@ const Page = () => {
   const [faName, setFaName] = React.useState("");
   const [states, setStates] = React.useState([]);
   const [alphabetsArray, setAlphabets] = React.useState([]);
+  const [startState, setStartState] = React.useState();
+  const [endStates, setEndStates] = React.useState();
+
+  const handleStartStateChange = (start_state) => {
+    setStartState(start_state);
+  };
+
+  const handleEndStatesChange = (end_states) => {
+    setEndStates(end_states);
+  };
   const handleFormSubmit = (event) => {
     event.preventDefault();
     createFA(faName);
@@ -112,18 +123,10 @@ const Page = () => {
                 >
                   Start State
                 </label>
-                <select
-                  name="start_state"
-                  className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  {states.map((state, index) => {
-                    return (
-                      <option key={index} value="">
-                        {state}
-                      </option>
-                    );
-                  })}
-                </select>
+                <SingleSelection
+                  options={states}
+                  handleStartStateChange={handleStartStateChange}
+                />
               </div>
               <div className="flex-1 ml-2">
                 <label
@@ -132,8 +135,61 @@ const Page = () => {
                 >
                   End States
                 </label>
-                <MultipleSelection options={states} />
+                <MultipleSelection
+                  options={states}
+                  handleEndStatesChange={handleEndStatesChange}
+                />
               </div>
+            </div>
+          </div>
+          <div className="col-span-1 lg:col-span-2 p-3">
+            <div className="border border-slate-300 w-full overflow-auto">
+              <table className="w-full table-fixed border border-collaps">
+                <thead>
+                  <tr>
+                    <th className="border border-slate-300 w-44 p-2">
+                      Transitions
+                    </th>
+                    {alphabetsArray.map((symbol, index) => {
+                      return (
+                        <th
+                          key={index}
+                          className=" w-44 border border-slate-300"
+                        >
+                          {symbol}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {states.map((state, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="border border-slate-300 w-full text-center"
+                      >
+                        <td className="border border-slate-300 w-44 p-3">
+                          {state}
+                        </td>
+                        {alphabetsArray.map((symbol, index) => {
+                          return (
+                            <td
+                              key={index}
+                              className="border border-slate-300 w-44 p-3"
+                            >
+                              <MultipleSelection
+                                options={states}
+                                handleEndStatesChange={handleEndStatesChange}
+                              ></MultipleSelection>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
