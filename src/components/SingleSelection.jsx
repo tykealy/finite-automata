@@ -41,8 +41,10 @@ export default function SingleSelection({ options, handleStartStateChange }) {
         }}
         className={`shadow-sm border border-grey-500 rounded-lg flex justify-end p-1 ${active} items-center`}
       >
-        <div className="flex-1 p-1 flex flex-inline flex-wrap">{select}</div>
-        <ChevronUpDownIcon className="font-medium w-5 h-8 " />
+        <div className="flex-1 p-1 flex flex-inline flex-wrap text-black">
+          {select}
+        </div>
+        <ChevronUpDownIcon className="font-medium w-5 h-8 text-black" />
       </div>
       <ul
         className="p-3 text-md rounded-lg shadow-gray-500/50 shadow-lg max-h-60 overflow-auto"
@@ -57,7 +59,7 @@ export default function SingleSelection({ options, handleStartStateChange }) {
               onClick={() => {
                 active ? unSelect(option) : handleSelect(option);
               }}
-              className={`hover:bg-gray-200 p-1 ${active}`}
+              className={`hover:bg-gray-200 p-1 ${active} text-black`}
             >
               {option}
             </li>
