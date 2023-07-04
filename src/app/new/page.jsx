@@ -4,13 +4,28 @@ import Link from "next/link";
 import React from "react";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+
 import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
-export async function createFA(name) {
+export async function createFA(
+  name,
+  states,
+  symbols,
+  start_state,
+  end_states,
+  transitions,
+  type
+) {
   const firestore = getFirestore();
   const c = collection(firestore, "automata");
   const doc1 = {
     name: name,
+    state: states,
+    symbols: symbols,
+    start_state: start_state,
+    end_states: end_states,
+    transitions: transitions,
+    type: type,
   };
   try {
     await addDoc(c, doc1);
@@ -26,6 +41,13 @@ const Page = () => {
   const [alphabetsArray, setAlphabets] = React.useState([]);
   const [startState, setStartState] = React.useState();
   const [endStates, setEndStates] = React.useState();
+  const [transitions, setTransitions] = React.useState({});
+
+  const setTransitionState = (state, symbol, selectedStates, transitions) => {
+    const t = transitions;
+    if (t[state] != null) t[state][symbol] = selectedStates;
+    setTransitions(t);
+  };
 
   const handleStartStateChange = (start_state) => {
     setStartState(start_state);
@@ -34,22 +56,40 @@ const Page = () => {
   const handleEndStatesChange = (end_states) => {
     setEndStates(end_states);
   };
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    createFA(faName);
-    setFaName("");
-  };
-  const handleStateArray = (e, statesString) => {
-    const statesArray = statesString.split(",");
+  const handleStateArray = (statesString) => {
+    const statesArray = statesString
+      .split(",")
+      .filter((state) => state.trim() !== "");
     setStates(statesArray);
   };
-  const handleAlphabetArray = (e, alphabets) => {
-    const alphabetsArray = alphabets.split(",");
+  const handleAlphabetArray = (alphabets) => {
+    const alphabetsArray = alphabets
+      .split(",")
+      .filter((alphabet) => alphabet.trim() !== "");
     setAlphabets(alphabetsArray);
-    console.log(alphabetsArray);
   };
+
+  const transition = (states, alphabets) => {
+    const t = transitions;
+
+    states.forEach((state) => {
+      if (!t.hasOwnProperty(state)) {
+        t[state] = {};
+        alphabets.forEach((a) => {
+          t[state][a] = [];
+        });
+      }
+    });
+
+    setTransitions(t);
+  };
+
+  React.useEffect(() => {
+    transition(states, alphabetsArray);
+  }, [states, alphabetsArray]);
+
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form>
       <div className="max-w-6xl mx-auto my-7 px-4">
         <div className="flex items-center">
           <Link
@@ -63,15 +103,42 @@ const Page = () => {
           <input
             name="fa-name"
             type="text"
-            className="flex-1 text-xl sm:text-2xl border border-transparent focus:outline-none focus:ring-0"
+            className="flex-1 text-xl sm:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
             placeholder="Input your FA Name"
             onChange={(event) => {
               setFaName(event.target.value);
             }}
           ></input>
           <button
-            type="submit"
-            className="text-white bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c]"
+            onClick={(e) => {
+              e.preventDefault();
+              const t = transitions;
+              Object.keys(t).forEach((key) => {
+                if (!states.includes(key)) {
+                  delete t[key];
+                }
+              });
+
+              Object.keys(t).forEach((state) => {
+                Object.keys(t[state]).forEach((key) => {
+                  if (!alphabetsArray.includes(key)) {
+                    delete t[state][key];
+                  }
+                });
+              });
+
+              setTransitions(t);
+              createFA(
+                faName,
+                states,
+                alphabetsArray,
+                startState,
+                endStates,
+                transitions,
+                ""
+              );
+            }}
+            className=" bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
           >
             SAVE
           </button>
@@ -89,12 +156,12 @@ const Page = () => {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  handleStateArray(e, e.target.value);
+                  handleStateArray(e.target.value);
                 }}
                 placeholder="Please seperate values by comma  ' , '"
                 type="text"
                 name="states"
-                className="px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="px-3 bg-white block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
             <div className="my-2">
@@ -107,12 +174,12 @@ const Page = () => {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  handleAlphabetArray(e, e.target.value);
+                  handleAlphabetArray(e.target.value);
                 }}
                 type="text"
                 placeholder="Please seperate values by comma  ' , '"
                 name="alphabets"
-                className="px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="px-3 bg-white block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
             <div className="flex my-2">
@@ -138,6 +205,7 @@ const Page = () => {
                 <MultipleSelection
                   options={states}
                   handleEndStatesChange={handleEndStatesChange}
+                  initialSelect={[]}
                 />
               </div>
             </div>
@@ -147,14 +215,14 @@ const Page = () => {
               <table className="w-full table-fixed border border-collaps">
                 <thead>
                   <tr>
-                    <th className="border border-slate-300 w-44 p-2">
+                    <th className="border border-slate-300 w-44 p-2 text-black">
                       Transitions
                     </th>
                     {alphabetsArray.map((symbol, index) => {
                       return (
                         <th
                           key={index}
-                          className=" w-44 border border-slate-300"
+                          className=" w-44 border border-slate-300 text-black"
                         >
                           {symbol}
                         </th>
@@ -169,7 +237,7 @@ const Page = () => {
                         key={index}
                         className="border border-slate-300 w-full text-center"
                       >
-                        <td className="border border-slate-300 w-44 p-3">
+                        <td className="border border-slate-300 w-44 p-3 text-black">
                           {state}
                         </td>
                         {alphabetsArray.map((symbol, index) => {
@@ -180,7 +248,10 @@ const Page = () => {
                             >
                               <MultipleSelection
                                 options={states}
-                                handleEndStatesChange={handleEndStatesChange}
+                                state={state}
+                                symbol={symbol}
+                                transitions={transitions}
+                                handleEndStatesChange={setTransitionState}
                               ></MultipleSelection>
                             </td>
                           );

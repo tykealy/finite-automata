@@ -2,9 +2,15 @@
 import React, { useEffect } from "react";
 import { ChevronUpDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
-const MultipleSelection = ({ options, handleEndStatesChange }) => {
+const MultipleSelection = ({
+  options,
+  handleEndStatesChange,
+  symbol,
+  state,
+  transitions,
+}) => {
   const [openList, setOpenList] = React.useState(false);
-  const [select, setSelecteed] = React.useState([]);
+  const [select, setSelected] = React.useState([]);
   const dropdownRef = React.useRef(null);
 
   useEffect(() => {
@@ -22,16 +28,27 @@ const MultipleSelection = ({ options, handleEndStatesChange }) => {
   }, []);
 
   React.useEffect(() => {
+    if (symbol != null && state != null && transitions != null) {
+      handleEndStatesChange(state, symbol, select, transitions);
+      return;
+    }
     handleEndStatesChange(select);
   }, [select]);
 
+  React.useEffect(() => {
+    if (symbol != null && state != null && transitions != null) {
+      const selectedStates = transitions?.[state]?.[symbol] || [];
+      setSelected(selectedStates);
+    }
+  }, [state, symbol]);
+
   function handleSelect(option) {
-    setSelecteed((select) => [...select, option]);
+    setSelected((select) => [...select, option]);
   }
 
   function unSelect(option) {
     const updatedSelect = select.filter((item) => item !== option);
-    setSelecteed(updatedSelect);
+    setSelected(updatedSelect);
   }
   const active = openList
     ? "ring-2 ring-inset ring-indigo-600"
@@ -51,7 +68,7 @@ const MultipleSelection = ({ options, handleEndStatesChange }) => {
                 key={index}
                 className="flex bg-gray-200 rounded-xl pl-2 pr-1 items-center mr-2 my-1"
               >
-                <span className="flex-1 mr-3">{s}</span>
+                <span className="flex-1 mr-3 text-black ">{s}</span>
                 <XMarkIcon
                   onClick={() => {
                     unSelect(s);
@@ -64,11 +81,11 @@ const MultipleSelection = ({ options, handleEndStatesChange }) => {
         </div>
         <XMarkIcon
           onClick={() => {
-            setSelecteed([]);
+            setSelected([]);
           }}
-          className="font-medium w-5 mx-1 hover:bg-gray-400 rounded-xl"
+          className="font-medium w-5 mx-1 hover:bg-gray-400 rounded-xl text-black"
         />
-        <ChevronUpDownIcon className="font-medium w-5 h-8 " />
+        <ChevronUpDownIcon className="font-medium w-5 h-8 text-black " />
       </div>
       <ul
         className="p-3 text-md rounded-lg shadow-gray-500/50 shadow-lg max-h-60 overflow-auto"
@@ -83,7 +100,7 @@ const MultipleSelection = ({ options, handleEndStatesChange }) => {
               onClick={() => {
                 active ? unSelect(option) : handleSelect(option);
               }}
-              className={`hover:bg-gray-200 p-1 ${active}`}
+              className={`hover:bg-gray-200 text-black p-1 ${active}`}
             >
               {option}
             </li>

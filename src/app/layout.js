@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <Topbar />
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );
