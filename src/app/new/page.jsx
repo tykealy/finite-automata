@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
-
+import { useRouter } from "next/navigation";
 import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
 export async function createFA(
@@ -28,14 +28,15 @@ export async function createFA(
     type: type,
   };
   try {
-    await addDoc(c, doc1);
-    alert(`New FA is created`);
+    const res = await addDoc(c, doc1);
+    return res.id;
   } catch (error) {
     console.log(error);
   }
 }
 
 const Page = () => {
+  const router = useRouter();
   const [faName, setFaName] = React.useState("");
   const [states, setStates] = React.useState([]);
   const [alphabetsArray, setAlphabets] = React.useState([]);
@@ -57,15 +58,13 @@ const Page = () => {
     setEndStates(end_states);
   };
   const handleStateArray = (statesString) => {
-    const statesArray = statesString
-      .split(",")
-      .filter((state) => state.trim() !== "");
+    const statesArray = statesString.split(",");
     setStates(statesArray);
   };
   const handleAlphabetArray = (alphabets) => {
-    const alphabetsArray = alphabets
-      .split(",")
-      .filter((alphabet) => alphabet.trim() !== "");
+    const alphabetsArray = alphabets.split(",");
+    if (alphabetsArray.includes("E"))
+      alphabetsArray.splice(alphabetsArray.indexOf("E"), 1, "ε");
     setAlphabets(alphabetsArray);
   };
 
@@ -90,7 +89,7 @@ const Page = () => {
 
   return (
     <form>
-      <div className="max-w-6xl mx-auto my-7 px-4">
+      <div className="max-w-7xl mx-auto my-7 px-4">
         <div className="flex items-center">
           <Link
             className="inline-flex items-center border rounded-lg bg-[#182c4c] mr-3 hover:bg-[#435f8c]"
@@ -101,6 +100,7 @@ const Page = () => {
             <span className="mr-2 text-white">Back</span>
           </Link>
           <input
+            value={faName}
             name="fa-name"
             type="text"
             className="flex-1 text-xl sm:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
@@ -136,7 +136,10 @@ const Page = () => {
                 endStates,
                 transitions,
                 ""
-              );
+              ).then((res) => {
+                router.push("/view/" + res);
+                alert("FA Created");
+              });
             }}
             className=" bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
           >
@@ -154,6 +157,7 @@ const Page = () => {
                 States
               </label>
               <input
+                value={states}
                 onChange={(e) => {
                   e.preventDefault();
                   handleStateArray(e.target.value);
@@ -172,6 +176,7 @@ const Page = () => {
                 Alphabets
               </label>
               <input
+                value={alphabetsArray}
                 onChange={(e) => {
                   e.preventDefault();
                   handleAlphabetArray(e.target.value);
@@ -205,7 +210,6 @@ const Page = () => {
                 <MultipleSelection
                   options={states}
                   handleEndStatesChange={handleEndStatesChange}
-                  initialSelect={[]}
                 />
               </div>
             </div>

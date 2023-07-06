@@ -1,11 +1,16 @@
 "use client";
 import React, { useEffect } from "react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
-export default function SingleSelection({ options, handleStartStateChange }) {
+export default function SingleSelection({
+  options,
+  handleStartStateChange,
+  initialState,
+}) {
   const [openList, setOpenList] = React.useState(false);
-  const [select, setSelecteed] = React.useState();
+  const [select, setSelected] = React.useState(initialState);
   const dropdownRef = React.useRef(null);
   useEffect(() => {
+    setSelected(initialState);
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpenList(false);
@@ -19,16 +24,24 @@ export default function SingleSelection({ options, handleStartStateChange }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (options && options.includes(initialState)) {
+      setSelected(initialState);
+    } else {
+      setSelected("");
+    }
+  }, [options, initialState]);
+
   React.useEffect(() => {
     handleStartStateChange(select);
   }, [select]);
 
   function handleSelect(option) {
-    setSelecteed(option);
+    setSelected(option);
   }
 
   function unSelect(option) {
-    select == option && setSelecteed();
+    select == option && setSelected();
   }
   const active = openList
     ? "ring-2 ring-inset ring-indigo-600"
@@ -50,7 +63,7 @@ export default function SingleSelection({ options, handleStartStateChange }) {
         className="p-3 text-md rounded-lg shadow-gray-500/50 shadow-lg max-h-60 overflow-auto"
         style={openList ? { display: "block" } : { display: "none" }}
       >
-        {options.map((option, index) => {
+        {options?.map((option, index) => {
           const isSelected = select == option;
           const active = isSelected ? "bg-gray-100" : "";
           return (
