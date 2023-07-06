@@ -8,9 +8,10 @@ const MultipleSelection = ({
   symbol,
   state,
   transitions,
+  initialSelect,
 }) => {
   const [openList, setOpenList] = React.useState(false);
-  const [select, setSelected] = React.useState([]);
+  const [select, setSelected] = React.useState(initialSelect);
   const dropdownRef = React.useRef(null);
 
   useEffect(() => {
@@ -26,6 +27,22 @@ const MultipleSelection = ({
       window.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (initialSelect == null) {
+      setSelected([]);
+      return;
+    }
+    setSelected(initialSelect);
+  }, [initialSelect]);
+
+  useEffect(() => {
+    select !== undefined &&
+      select.forEach((s) => {
+        options?.includes(s) ||
+          setSelected((select) => select.filter((item) => item !== s));
+      });
+  }, [options]);
 
   React.useEffect(() => {
     if (symbol != null && state != null && transitions != null) {
@@ -62,7 +79,7 @@ const MultipleSelection = ({
         className={`shadow-sm border border-grey-500 rounded-lg flex justify-end p-1 ${active} items-center`}
       >
         <div className="flex-1 p-1 flex flex-inline flex-wrap">
-          {select.map((s, index) => {
+          {select?.map((s, index) => {
             return (
               <span
                 key={index}
@@ -91,8 +108,8 @@ const MultipleSelection = ({
         className="p-3 text-md rounded-lg shadow-gray-500/50 shadow-lg max-h-60 overflow-auto"
         style={openList ? { display: "block" } : { display: "none" }}
       >
-        {options.map((option, index) => {
-          const isSelected = select.includes(option);
+        {options?.map((option, index) => {
+          const isSelected = select?.includes(option);
           const active = isSelected ? "bg-gray-100" : "";
           return (
             <li
