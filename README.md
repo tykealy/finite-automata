@@ -1,5 +1,31 @@
 ## Getting Started
 
+Build docker image
+
+```base
+docker build -t fa-image .
+```
+
+Make container
+
+```base
+docker run --name fa-container -v  Your/path/to/the/project:/usr/src/app -p 3000:3000 fa-image
+```
+
+To stop the container
+
+```base
+docker stop fa-container
+```
+
+To start the container
+
+```base
+docker start fa-container
+```
+
+After starting container you can access the app at http://localhost:3000
+
 Install all the dependencies:
 
 ```bash
