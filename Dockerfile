@@ -1,5 +1,5 @@
 # Use a Node.js base image with the specified version
-FROM node:20
+FROM node:18
 
 # Set the working directory inside the Docker image
 WORKDIR /usr/src/app
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build the Next.js application
-RUN npm run build
+# RUN npm run build
 
 # Specify the command to start the Next.js development server
 CMD ["npm", "run", "dev"]

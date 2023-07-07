@@ -103,7 +103,7 @@ const Page = () => {
             value={faName}
             name="fa-name"
             type="text"
-            className="flex-1 text-xl sm:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
+            className="flex-1 text-md md:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
             placeholder="Input your FA Name"
             onChange={(event) => {
               setFaName(event.target.value);
@@ -141,7 +141,7 @@ const Page = () => {
                 alert("FA Created");
               });
             }}
-            className=" bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
+            className="bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
           >
             SAVE
           </button>
