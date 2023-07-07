@@ -1,20 +1,27 @@
-# Use a Node.js base image with the specified version
-FROM node:20
+# Dockerfile
 
-# Set the working directory inside the Docker image
-WORKDIR /usr/src/app
+# Use node alpine as it's a small node image
+FROM node:alpine
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Create the directory on the node image 
+# where our Next.js app will live
+RUN mkdir -p /app
 
-# Install project dependencies
-RUN npm install
+# Set /app as the working directory
+WORKDIR /app
 
-# Copy the rest of the project files to the working directory
-COPY . .
+# Copy package.json and package-lock.json
+# to the /app working directory
+COPY package*.json /app
 
-# Build the Next.js application
-RUN npm run build
+# Install dependencies in /app
+RUN yarn install
 
-# Specify the command to start the Next.js development server
-CMD ["npm", "run", "dev"]
+# Copy the rest of our Next.js folder into /app
+COPY . /app
+
+# Ensure port 3000 is accessible to our system
+EXPOSE 3000
+
+# Run yarn dev, as we would via the command line 
+CMD ["yarn", "dev"]
