@@ -38,18 +38,20 @@ export default async function Page() {
                     as={`/view/${fa.id}`}
                   >
                     <span>
-                      <div className="font-semibold">{fa.data().name}</div>
-                      <div className="my-2 text-sm">{`States: {${
+                      <div className="font-semibold text-black">
+                        {fa.data().name}
+                      </div>
+                      <div className="my-2 text-sm text-black">{`States: {${
                         fa.data().state
                       }} - Symbols: {${fa.data().symbols}}`}</div>
                       <div className="flex mt-5">
-                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2">
+                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2 text-black">
                           {fa.data().type}
                         </span>
-                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2">
+                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2 text-black">
                           {`Start state: ${fa.data().start_state}`}
                         </span>
-                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2">
+                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2 text-black">
                           {`Start state: {${fa.data().end_states}}`}
                         </span>
                       </div>

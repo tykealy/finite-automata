@@ -120,7 +120,7 @@ const FA = ({ params }) => {
         <input
           required
           type="text"
-          className="flex-1 text-xl sm:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
+          className="md:ml-1 flex-1 text-lg sm:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
           placeholder="Input your FA Name"
           onChange={(event) => {
             setFaName(event.target.value);
