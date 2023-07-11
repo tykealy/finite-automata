@@ -1,8 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import "./../../firebaseConfig";
-import { TrashIcon } from "@heroicons/react/20/solid";
-
+import { TrashIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { collection, getDocs, getFirestore, query } from "firebase/firestore";
 
 export default async function Page() {
@@ -23,6 +22,14 @@ export default async function Page() {
       </div>
 
       <div className="border border-gray-300 my-3" />
+      <div className="text-black bg-white border-2 w-full flex p-4">
+        <MagnifyingGlassIcon className="w-5 mx-3" />
+        <input
+          type="text"
+          className="bg-white flex-1 border-none outline-none "
+          placeholder="search by title"
+        />
+      </div>
       <div>
         {(fas == undefined || fas.docs.length == 0) && (
           <span>No Finite Automata</span>
