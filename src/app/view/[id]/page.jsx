@@ -122,7 +122,6 @@ const FA = ({ params }) => {
     });
 
     setTransitions(t);
-    console.log(transitions);
     if (
       states.length == 0 ||
       alphabetsArray.length == 0 ||
