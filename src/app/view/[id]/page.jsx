@@ -45,7 +45,7 @@ const FA = ({ params }) => {
   const [startState, setStartState] = React.useState("");
   const [endStates, setEndStates] = React.useState([]);
   const [transitions, setTransitions] = React.useState({});
-
+  
   async function getFa(param) {
     const firestore = getFirestore();
     const docRef = doc(firestore, "automata", param);
@@ -341,7 +341,9 @@ const FA = ({ params }) => {
           </div>
         </div>
       </form>
-      <Features transitionFunction={transitions} />
+      <Features 
+        fa={fa}
+        transitionFunction={transitions} />
     </div>
   );
 };
