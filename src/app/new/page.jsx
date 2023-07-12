@@ -7,6 +7,7 @@ import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
+import Features from "@/components/Features";
 export async function createFA(
   name,
   states,
@@ -87,9 +88,82 @@ const Page = () => {
     transition(states, alphabetsArray);
   }, [states, alphabetsArray]);
 
+  const handleSave = (e) => {
+    e.preventDefault();
+    const t = transitions;
+    Object.keys(t).forEach((key) => {
+      if (!states.includes(key)) {
+        delete t[key];
+      }
+    });
+
+    Object.keys(t).forEach((state) => {
+      Object.keys(t[state]).forEach((key) => {
+        if (!alphabetsArray.includes(key)) {
+          delete t[state][key];
+        }
+      });
+    });
+
+    setTransitions(t);
+
+    if (
+      states.length == 0 ||
+      alphabetsArray.length == 0 ||
+      startState == "" ||
+      endStates.length == 0
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+    const type = checkDFAorNFA(transitions);
+    createFA(
+      faName,
+      states,
+      alphabetsArray,
+      startState,
+      endStates,
+      transitions,
+      type
+    ).then((res) => {
+      router.push("/view/" + res);
+      alert("FA Created");
+    });
+  };
+  function checkDFAorNFA(transitionFunction) {
+    // Iterate over each state in the transition function
+    for (const state in transitionFunction) {
+      // Iterate over each input symbol for the current state
+      for (const symbol in transitionFunction[state]) {
+        const nextStates = transitionFunction[state][symbol];
+
+        // Check if there are multiple possible next states
+        if (nextStates.length > 1) {
+          return "NFA";
+        }
+
+        // Check if there is a missing transition for any state and input symbol combination
+        if (!nextStates.length) {
+          return "NFA";
+        }
+
+        // Check if there are epsilon transitions (transitions without consuming an input symbol)
+        if (symbol === "ε") {
+          return "NFA";
+        }
+      }
+    }
+
+    return "DFA";
+  }
+
   return (
-    <form>
-      <div className="max-w-7xl mx-auto my-7 px-4">
+    <div className="max-w-7xl mx-auto my-7 px-4">
+      <form
+        onSubmit={(e) => {
+          handleSave(e);
+        }}
+      >
         <div className="flex items-center">
           <Link
             className="inline-flex items-center border rounded-lg bg-[#182c4c] mr-3 hover:bg-[#435f8c]"
@@ -100,47 +174,18 @@ const Page = () => {
             <span className="mr-2 text-white">Back</span>
           </Link>
           <input
+            required
             value={faName}
             name="fa-name"
             type="text"
-            className="flex-1 text-md md:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
+            className="md:ml-1 flex-1 text-lg sm:text-2xl border border-transparent focus:outline-none focus:ring-0 text-black bg-white"
             placeholder="Input your FA Name"
             onChange={(event) => {
               setFaName(event.target.value);
             }}
           ></input>
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              const t = transitions;
-              Object.keys(t).forEach((key) => {
-                if (!states.includes(key)) {
-                  delete t[key];
-                }
-              });
-
-              Object.keys(t).forEach((state) => {
-                Object.keys(t[state]).forEach((key) => {
-                  if (!alphabetsArray.includes(key)) {
-                    delete t[state][key];
-                  }
-                });
-              });
-
-              setTransitions(t);
-              createFA(
-                faName,
-                states,
-                alphabetsArray,
-                startState,
-                endStates,
-                transitions,
-                ""
-              ).then((res) => {
-                router.push("/view/" + res);
-                alert("FA Created");
-              });
-            }}
+            type="submit"
             className="bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
           >
             SAVE
@@ -157,6 +202,7 @@ const Page = () => {
                 States
               </label>
               <input
+                required
                 value={states}
                 onChange={(e) => {
                   e.preventDefault();
@@ -176,6 +222,7 @@ const Page = () => {
                 Alphabets
               </label>
               <input
+                required
                 value={alphabetsArray}
                 onChange={(e) => {
                   e.preventDefault();
@@ -268,8 +315,9 @@ const Page = () => {
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+      <Features transitionFunction={transitions} />
+    </div>
   );
 };
 

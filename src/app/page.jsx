@@ -1,8 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import "./../../firebaseConfig";
-import { TrashIcon } from "@heroicons/react/20/solid";
-
+import { TrashIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { collection, getDocs, getFirestore, query } from "firebase/firestore";
 
 export default async function Page() {
@@ -23,6 +22,14 @@ export default async function Page() {
       </div>
 
       <div className="border border-gray-300 my-3" />
+      <div className="text-black bg-white border-2 w-full flex p-4">
+        <MagnifyingGlassIcon className="w-5 mx-3" />
+        <input
+          type="text"
+          className="bg-white flex-1 border-none outline-none "
+          placeholder="search by title"
+        />
+      </div>
       <div>
         {(fas == undefined || fas.docs.length == 0) && (
           <span>No Finite Automata</span>
@@ -38,18 +45,20 @@ export default async function Page() {
                     as={`/view/${fa.id}`}
                   >
                     <span>
-                      <div className="font-semibold">{fa.data().name}</div>
-                      <div className="my-2 text-sm">{`States: {${
+                      <div className="font-semibold text-black">
+                        {fa.data().name}
+                      </div>
+                      <div className="my-2 text-sm text-black">{`States: {${
                         fa.data().state
                       }} - Symbols: {${fa.data().symbols}}`}</div>
                       <div className="flex mt-5">
-                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2">
+                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2 text-black">
                           {fa.data().type}
                         </span>
-                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2">
+                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2 text-black">
                           {`Start state: ${fa.data().start_state}`}
                         </span>
-                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2">
+                        <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2 text-black">
                           {`Start state: {${fa.data().end_states}}`}
                         </span>
                       </div>
