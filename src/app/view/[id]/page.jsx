@@ -7,7 +7,6 @@ import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
 import { useRouter } from "next/navigation";
-import nfaToDfa from "@/utils/NfaToDfa";
 import Features from "@/components/Features";
 async function updateFA(
   name,
@@ -37,11 +36,6 @@ async function updateFA(
   }
 }
 
-// Define epsilon closure variable to store the character representing epsilon
-const epsilon = "ε";
-// Const state to store the state representation of the converted DFA
-const dfaState = "q_prime_";
-
 const FA = ({ params }) => {
   const router = useRouter();
   const [fa, setFa] = React.useState({});
@@ -51,58 +45,6 @@ const FA = ({ params }) => {
   const [startState, setStartState] = React.useState("");
   const [endStates, setEndStates] = React.useState([]);
   const [transitions, setTransitions] = React.useState({});
-
-  // Declare all variables for conversion to DFA
-  const [dfa, setDfa] = React.useState({});
-  const [dfaName, setDfaName] = React.useState("");
-  const [dfaStates, setDfaStates] = React.useState([]);
-  const [dfaAlphabets, setDfaAlphabets] = React.useState([]);
-  const [dfaStartState, setDfaStartState] = React.useState("");
-  const [dfaEndStates, setDfaEndStates] = React.useState([]);
-  // For {q0, q1} state
-  const [dfaTransitions, setDfaTransitions] = React.useState({});
-  // For q' state
-  const [dfaConvertedTransitions, setDfaConvertedTransitions] = React.useState({});
-
-  // Epsilon closure function
-  const epsilonClosure = (state) => {
-    // Declare an array to store the epsilon closure
-    const epsilonClosureArray = [];
-    // Push the current state to the epsilon closure array
-    epsilonClosureArray.push(state);
-    // Check if the current state has epsilon transitions
-    if (fa.transitions[state][epsilon].length > 0) {
-      // Loop through the epsilon transitions
-      fa.transitions[state][epsilon].forEach((transition) => {
-        // Push the transition to the epsilon closure array
-        epsilonClosureArray.push(transition);
-        // Check if the transition has epsilon transitions
-        if (fa.transitions[transition][epsilon].length > 0) {
-          // Loop through the epsilon transitions
-          fa.transitions[transition][epsilon].forEach((transition) => {
-            // Push the transition to the epsilon closure array
-            epsilonClosureArray.push(transition);
-          });
-        }
-      });
-    }
-    // Return the epsilon closure array
-    return epsilonClosureArray;
-  };
-
-  
-  const convertedStartState = (originalStartState) => {
-    // Check if the original start state goes through epsilon transitions
-    if (fa.transitions[originalStartState][epsilon].length > 0 || !fa.transitions[originalStartState][epsilon]) {
-      console.log('Start state goes through epsilon transitions');
-    }
-    return dfaState + '0';
-  }
-
-  async function convertToDFA() {
-    // Define start state by checking if the start state goes through epsilon transitions
-    const dfaStartState = convertedStartState(startState);
-  }
   
   async function getFa(param) {
     const firestore = getFirestore();
@@ -399,7 +341,9 @@ const FA = ({ params }) => {
           </div>
         </div>
       </form>
-      <Features transitionFunction={transitions} />
+      <Features 
+        fa={fa}
+        transitionFunction={transitions} />
     </div>
   );
 };
