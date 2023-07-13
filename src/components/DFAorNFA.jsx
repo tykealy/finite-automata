@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 const DFAorNFA = ({ transitionFunction }) => {
   const checkDFAorNFA = (transitionFunction) => {
     // Iterate over each state in the transition function
@@ -36,7 +38,14 @@ const DFAorNFA = ({ transitionFunction }) => {
         onClick={(e) => {
           e.preventDefault();
           const type = checkDFAorNFA(transitionFunction);
-          alert(type);
+          Swal.fire({
+            title: type,
+            text: "Finite Automata Type",
+            icon: "success",
+            confirmButtonText: "Cool",
+              //button color
+            confirmButtonColor: "#182c4c",
+            });
         }}
       >
         TEST

@@ -5,7 +5,7 @@ import StringInput from "./StringInput";
 
 const Features = ({ fa, transitionFunction }) => {
   return (
-    <div className="my-2">
+    <div className="mt-7">
       <div className="text-black text-xl md:text-2xl lg:text-3xl font-bold">
         Features
       </div>
