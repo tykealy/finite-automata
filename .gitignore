@@ -41,3 +41,4 @@ next-env.d.ts
 .idea/finite-automata.iml
 .idea/jsLibraryMappings.xml
 .idea/vcs.xml
+.idea/modules.xml
