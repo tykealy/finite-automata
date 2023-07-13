@@ -37,3 +37,7 @@ next-env.d.ts
 
 # Logic
 /logic*
+
+.idea/finite-automata.iml
+.idea/jsLibraryMappings.xml
+.idea/vcs.xml
