@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
 import Features from "@/components/Features";
+import Swal from "sweetalert2";
 export async function createFA(
   name,
   states,
@@ -127,7 +128,13 @@ const Page = () => {
       type
     ).then((res) => {
       router.push("/view/" + res);
-      alert("FA Created");
+      Swal.fire({
+        icon: "success",
+        title: "Your FA has been saved",
+        timer: 2000,
+        confirmButtonText: "Cool",
+        confirmButtonColor: "#182c4c",
+        });
     });
   };
   function checkDFAorNFA(transitionFunction) {
