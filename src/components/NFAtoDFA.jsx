@@ -11,7 +11,7 @@ const NFAtoDFA = (fa) => {
         onClick={
           () => {
             const dfa = nfaToDfa(fa.fa);
-            console.log(dfa);
+            console.log(JSON.stringify(dfa));
           }
         }
         className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg">
