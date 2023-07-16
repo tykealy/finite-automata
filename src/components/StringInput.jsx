@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Swal from "sweetalert2";
 const StringInput = () => {
   const [string, setString] = React.useState("");
   return (
@@ -18,7 +19,14 @@ const StringInput = () => {
       <button
         onClick={(e) => {
           e.preventDefault();
-          alert(string);
+            Swal.fire({
+                title: string,
+                text: "Test if a string is accepted.",
+                icon: "success",
+                confirmButtonText: "Cool",
+                //button color
+                confirmButtonColor: "#182c4c",
+            });
         }}
         className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
       >

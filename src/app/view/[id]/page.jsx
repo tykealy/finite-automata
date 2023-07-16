@@ -8,6 +8,7 @@ import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
 import { useRouter } from "next/navigation";
 import Features from "@/components/Features";
+import Swal from "sweetalert2";
 async function updateFA(
   name,
   states,
@@ -128,7 +129,11 @@ const FA = ({ params }) => {
       startState == "" ||
       endStates.length == 0
     ) {
-      alert("Please fill all the fields");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill all the fields",
+        });
       return;
     }
 
@@ -146,7 +151,13 @@ const FA = ({ params }) => {
     )
       .then(() => {
         router.refresh();
-        alert("FA Updated");
+        Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Automata updated successfully",
+          confirmButtonText: "Cool",
+          confirmButtonColor: "#3085d6",
+            });
       })
       .catch((error) => {
         alert(error);
