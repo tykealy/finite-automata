@@ -46,7 +46,7 @@ const FA = ({ params }) => {
   const [startState, setStartState] = React.useState("");
   const [endStates, setEndStates] = React.useState([]);
   const [transitions, setTransitions] = React.useState({});
-  
+
   async function getFa(param) {
     const firestore = getFirestore();
     const docRef = doc(firestore, "automata", param);
@@ -133,7 +133,7 @@ const FA = ({ params }) => {
         icon: "error",
         title: "Oops...",
         text: "Please fill all the fields",
-        });
+      });
       return;
     }
 
@@ -152,12 +152,12 @@ const FA = ({ params }) => {
       .then(() => {
         router.refresh();
         Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Automata updated successfully",
+          icon: "success",
+          title: "Success",
+          text: "Automata updated successfully",
           confirmButtonText: "Cool",
           confirmButtonColor: "#3085d6",
-            });
+        });
       })
       .catch((error) => {
         alert(error);
@@ -360,9 +360,7 @@ const FA = ({ params }) => {
           </div>
         </div>
       </form>
-      <Features 
-        fa={fa}
-        transitionFunction={transitions} />
+      <Features fa={fa} transitionFunction={transitions} />
     </div>
   );
 };
