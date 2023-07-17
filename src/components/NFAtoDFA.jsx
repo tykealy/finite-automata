@@ -7,13 +7,14 @@ const NFAtoDFA = (fa) => {
       <div className="text-sm text-gray-500 my-2">
         Construct an equivalent DFA from an NFA
       </div>
-      <button
-        onClick={() => {
-          const dfa = nfaToDfa(fa.fa);
-          console.log(dfa);
-        }}
-        className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
-      >
+      <button 
+        onClick={
+          () => {
+            const dfa = nfaToDfa(fa.fa);
+            console.log(JSON.stringify(dfa));
+          }
+        }
+        className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg">
         Construct
       </button>
     </div>
