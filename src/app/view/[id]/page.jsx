@@ -218,14 +218,6 @@ const FA = ({ params }) => {
             value={faName}
           />
           <button
-            onClick={() => {
-              console.log(JSON.stringify(fa));
-            }}
-            className=" bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
-          >
-            CONSOLE LOG
-          </button>
-          <button
             type="submit"
             className=" bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
           >
