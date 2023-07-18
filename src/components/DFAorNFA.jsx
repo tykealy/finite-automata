@@ -1,43 +1,20 @@
 "use client";
-import {
-  Dialog,
-  DialogBody,
-  DialogHeader,
-  DialogFooter,
-  Button,
-} from "@material-tailwind/react";
+import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 import React from "react";
+import checkDFAorNFA from "@/utils/CheckDFAorNFA";
+import cleanTransitions from "@/utils/CleanTransitions";
 import { instance } from "@viz-js/viz";
-const DFAorNFA = ({ transitionFunction, fa }) => {
+const DFAorNFA = ({
+  transitions,
+  start_state,
+  end_states,
+  states,
+  symbols,
+}) => {
   const [open, setOpen] = React.useState(false);
-  const [type, setType] = React.useState();
+  const [type, setType] = React.useState("");
+  const [cleanedTransitions, setCleanedTransitions] = React.useState({});
   const grapRef = React.useRef();
-  const checkDFAorNFA = (transitionFunction) => {
-    // Iterate over each state in the transition function
-    for (const state in transitionFunction) {
-      // Iterate over each input symbol for the current state
-      for (const symbol in transitionFunction[state]) {
-        const nextStates = transitionFunction[state][symbol];
-
-        // Check if there are multiple possible next states
-        if (nextStates.length > 1) {
-          return "NFA";
-        }
-
-        // Check if there is a missing transition for any state and input symbol combination
-        if (!nextStates.length) {
-          return "NFA";
-        }
-
-        // Check if there are epsilon transitions (transitions without consuming an input symbol)
-        if (symbol === "ε") {
-          return "NFA";
-        }
-      }
-    }
-
-    return "DFA";
-  };
 
   function transitionsToDotScript(transitions, start, end) {
     let dotScript = "digraph { rankdir=LR;\n";
@@ -66,7 +43,6 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
     }
 
     dotScript += "}";
-    console.log(dotScript);
     return dotScript;
   }
 
@@ -80,11 +56,13 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
         className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
         onClick={(e) => {
           e.preventDefault();
-          setType(checkDFAorNFA(transitionFunction));
+          const cleanedT = cleanTransitions(transitions, states, symbols);
+          setCleanedTransitions(cleanedT);
+          setType(checkDFAorNFA(cleanedT));
           const transitionsDot = transitionsToDotScript(
-            transitionFunction,
-            fa.start_state,
-            fa.end_states
+            cleanedT,
+            start_state,
+            end_states
           );
           instance().then((viz) => {
             grapRef.current?.appendChild(viz.renderSVGElement(transitionsDot));
@@ -109,9 +87,9 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
         <DialogHeader>This is {type}</DialogHeader>
         <DialogBody divider className="h-[40rem] overflow-scroll">
           <div className="">
-            <div>{`States: { ${fa?.state} }`}</div>
-            <div>{`Symbols: { ${fa?.symbols} }`}</div>
-            <div>{`Finale State: { ${fa?.end_states} }`}</div>
+            <div>{`States: { ${states} }`}</div>
+            <div>{`Symbols: { ${symbols} }`}</div>
+            <div>{`Finale State: { ${end_states} }`}</div>
             <div
               ref={grapRef}
               className="my-10"
@@ -124,7 +102,7 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
                     <th className="border border-slate-300 md:w-44 w-36 p-2 text-black">
                       Transitions
                     </th>
-                    {fa?.symbols?.map((symbol, index) => {
+                    {symbols?.map((symbol, index) => {
                       return (
                         <td
                           key={index}
@@ -137,7 +115,7 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {fa?.state?.map((state, index) => {
+                  {states?.map((state, index) => {
                     return (
                       <tr
                         key={index}
@@ -146,13 +124,13 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
                         <td className="border border-slate-300 w-44 p-3 text-black">
                           {state}
                         </td>
-                        {fa?.symbols.map((symbol, index) => {
+                        {symbols?.map((symbol, index) => {
                           return (
                             <td
                               key={index}
                               className="border border-slate-300 w-44 p-3"
                             >
-                              {fa?.transitions?.[state]?.[symbol].join(",")}
+                              {cleanedTransitions?.[state]?.[symbol]?.join(",")}
                             </td>
                           );
                         })}
@@ -164,7 +142,7 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
             </div>
           </div>
         </DialogBody>
-        <DialogFooter className="space-x-2">
+        {/* <DialogFooter className="space-x-2">
           <Button
             variant="outlined"
             color="red"
@@ -174,7 +152,7 @@ const DFAorNFA = ({ transitionFunction, fa }) => {
           >
             close
           </Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </Dialog>
     </div>
   );

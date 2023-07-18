@@ -3,7 +3,14 @@ import MinimizeDFA from "./MinimizeDFA";
 import NFAtoDFA from "./NFAtoDFA";
 import StringInput from "./StringInput";
 
-const Features = ({ fa, transitionFunction }) => {
+const Features = ({
+  fa,
+  transitions,
+  start_state,
+  end_states,
+  symbols,
+  states,
+}) => {
   return (
     <div className="mt-7">
       <div className="text-black text-xl md:text-2xl lg:text-3xl font-bold">
@@ -11,16 +18,28 @@ const Features = ({ fa, transitionFunction }) => {
       </div>
       <div className="p-2 my-2 grid md:grid-cols-2 gap-4">
         <div className="grid">
-          <DFAorNFA transitionFunction={transitionFunction} fa={fa} />
+          <DFAorNFA
+            transitions={transitions}
+            start_state={start_state}
+            end_states={end_states}
+            states={states}
+            symbols={symbols}
+          />
         </div>
         <div className="grid">
-          <StringInput />
+          <StringInput
+            transitions={transitions}
+            start_state={start_state}
+            end_states={end_states}
+            states={states}
+            symbols={symbols}
+          />
         </div>
         <div className="grid">
           <NFAtoDFA fa={fa} />
         </div>
         <div className="grid">
-          <MinimizeDFA />
+          <MinimizeDFA dfa={fa} />
         </div>
       </div>
     </div>
