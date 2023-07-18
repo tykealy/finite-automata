@@ -2,13 +2,16 @@
 import "./../../../firebaseConfig";
 import Link from "next/link";
 import React from "react";
+import checkDFAorNFA from "@/utils/CheckDFAorNFA";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
 import Features from "@/components/Features";
+import cleanTransitions from "@/utils/CleanTransitions";
 import Swal from "sweetalert2";
+
 export async function createFA(
   name,
   states,
@@ -41,7 +44,7 @@ const Page = () => {
   const router = useRouter();
   const [faName, setFaName] = React.useState("");
   const [states, setStates] = React.useState([]);
-  const [alphabetsArray, setAlphabets] = React.useState([]);
+  const [symbols, setSymbols] = React.useState([]);
   const [startState, setStartState] = React.useState();
   const [endStates, setEndStates] = React.useState();
   const [transitions, setTransitions] = React.useState({});
@@ -64,10 +67,9 @@ const Page = () => {
     setStates(statesArray);
   };
   const handleAlphabetArray = (alphabets) => {
-    const alphabetsArray = alphabets.split(",");
-    if (alphabetsArray.includes("E"))
-      alphabetsArray.splice(alphabetsArray.indexOf("E"), 1, "ε");
-    setAlphabets(alphabetsArray);
+    const symbols = alphabets.split(",");
+    if (symbols.includes("E")) symbols.splice(symbols.indexOf("E"), 1, "ε");
+    setSymbols(symbols);
   };
 
   const transition = (states, alphabets) => {
@@ -86,42 +88,30 @@ const Page = () => {
   };
 
   React.useEffect(() => {
-    transition(states, alphabetsArray);
-  }, [states, alphabetsArray]);
+    transition(states, symbols);
+  }, [states, symbols]);
 
   const handleSave = (e) => {
     e.preventDefault();
-    const t = transitions;
-    Object.keys(t).forEach((key) => {
-      if (!states.includes(key)) {
-        delete t[key];
-      }
-    });
 
-    Object.keys(t).forEach((state) => {
-      Object.keys(t[state]).forEach((key) => {
-        if (!alphabetsArray.includes(key)) {
-          delete t[state][key];
-        }
-      });
-    });
-
+    const t = cleanTransitions(transitions, states, symbols);
     setTransitions(t);
 
     if (
       states.length == 0 ||
-      alphabetsArray.length == 0 ||
+      symbols.length == 0 ||
       startState == "" ||
       endStates.length == 0
     ) {
       alert("Please fill all the fields");
       return;
     }
+
     const type = checkDFAorNFA(transitions);
     createFA(
       faName,
       states,
-      alphabetsArray,
+      symbols,
       startState,
       endStates,
       transitions,
@@ -134,35 +124,9 @@ const Page = () => {
         timer: 2000,
         confirmButtonText: "Cool",
         confirmButtonColor: "#182c4c",
-        });
+      });
     });
   };
-  function checkDFAorNFA(transitionFunction) {
-    // Iterate over each state in the transition function
-    for (const state in transitionFunction) {
-      // Iterate over each input symbol for the current state
-      for (const symbol in transitionFunction[state]) {
-        const nextStates = transitionFunction[state][symbol];
-
-        // Check if there are multiple possible next states
-        if (nextStates.length > 1) {
-          return "NFA";
-        }
-
-        // Check if there is a missing transition for any state and input symbol combination
-        if (!nextStates.length) {
-          return "NFA";
-        }
-
-        // Check if there are epsilon transitions (transitions without consuming an input symbol)
-        if (symbol === "ε") {
-          return "NFA";
-        }
-      }
-    }
-
-    return "DFA";
-  }
 
   return (
     <div className="max-w-7xl mx-auto my-7 px-4">
@@ -230,7 +194,7 @@ const Page = () => {
               </label>
               <input
                 required
-                value={alphabetsArray}
+                value={symbols}
                 onChange={(e) => {
                   e.preventDefault();
                   handleAlphabetArray(e.target.value);
@@ -276,7 +240,7 @@ const Page = () => {
                     <th className="border border-slate-300 w-44 p-2 text-black">
                       Transitions
                     </th>
-                    {alphabetsArray.map((symbol, index) => {
+                    {symbols.map((symbol, index) => {
                       return (
                         <th
                           key={index}
@@ -298,7 +262,7 @@ const Page = () => {
                         <td className="border border-slate-300 w-44 p-3 text-black">
                           {state}
                         </td>
-                        {alphabetsArray.map((symbol, index) => {
+                        {symbols.map((symbol, index) => {
                           return (
                             <td
                               key={index}
@@ -323,7 +287,13 @@ const Page = () => {
           </div>
         </div>
       </form>
-      <Features transitionFunction={transitions} />
+      <Features
+        transitions={transitions}
+        symbols={symbols}
+        start_state={startState}
+        end_states={endStates}
+        states={states}
+      />
     </div>
   );
 };

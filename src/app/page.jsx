@@ -59,7 +59,7 @@ export default async function Page() {
                           {`Start state: ${fa.data().start_state}`}
                         </span>
                         <span className="px-3 py-1 bg-gray-200 text-sm rounded-xl mr-2 text-black">
-                          {`Start state: {${fa.data().end_states}}`}
+                          {`Final states: {${fa.data().end_states}}`}
                         </span>
                       </div>
                     </span>
