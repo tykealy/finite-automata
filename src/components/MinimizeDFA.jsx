@@ -1,6 +1,7 @@
 import minimizeDfa from "@/utils/MinimizeDfa";
-
-const MinimizeDFA = (fa) => {
+import checkDFAorNFA from "@/utils/CheckDFAorNFA";
+import Swal from "sweetalert2";
+const MinimizeDFA = ({ fa }) => {
   return (
     <div className="text-black w-full border rounded-lg shadow-lg shadow-black-400 px-5 pt-5">
       <div className=" text-md">Minimize DFA</div>
@@ -9,9 +10,16 @@ const MinimizeDFA = (fa) => {
       </div>
       <button
         className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
-        onClick={() => {
-          const minimize = minimizeDfa(fa);
-          console.log(minimize);
+        onClick={(e) => {
+          e.preventDefault();
+          const type = checkDFAorNFA(fa?.transitions);
+          if (type == "NFA") {
+            Swal.fire({
+              icon: "error",
+              title: "Oops... This isn't DFA!",
+            });
+            return;
+          }
         }}
       >
         Minimize

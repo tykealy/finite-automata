@@ -1,5 +1,5 @@
 // delcare dfa prefix
-const dfa_prefix = "q_prime_";
+const dfa_prefix = "Q";
 // delcare epsilon close symbol
 const epsilon = "ε";
 
@@ -92,7 +92,7 @@ function nfaToDfa(fa: any): any {
 
     let dfaNfaRelation = {};
     let dfaTransitions = {};
-    let dfaSymbols = fa.symbols;
+    let dfaSymbols = fa.symbols.filter((symbol: any) => symbol !== epsilon);
     let dfaStates = [];
     let dfaEndStates = [];
     let visitedRelationStates = [];

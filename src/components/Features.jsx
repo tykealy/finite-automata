@@ -36,10 +36,17 @@ const Features = ({
           />
         </div>
         <div className="grid">
-          <NFAtoDFA fa={fa} />
+          <NFAtoDFA
+            fa={fa}
+            transitions={transitions}
+            start_state={start_state}
+            end_states={end_states}
+            states={states}
+            symbols={symbols}
+          />
         </div>
         <div className="grid">
-          <MinimizeDFA dfa={fa} />
+          <MinimizeDFA fa={fa} />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 import React from "react";
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 import checkDFAorNFA from "@/utils/CheckDFAorNFA";
-import minimizeDfa from "@/utils/MinimizeDfa";
+import nfaToDfa from "@/utils/NfaToDfa";
 import stringTest from "@/utils/StringTest";
 import { instance } from "@viz-js/viz";
 const StringInput = ({
@@ -19,11 +19,42 @@ const StringInput = ({
 
   const handleTest = (e) => {
     e.preventDefault();
-    const testResult = stringTest(string, transitions, start_state, end_states);
-    instance().then((viz) => {
-      grapRef.current?.appendChild(viz.renderSVGElement(testResult.dotScript));
-    });
-    setIsAccepted(testResult.isAccepted);
+    const type = checkDFAorNFA(transitions);
+    if (type == "DFA") {
+      const testResult = stringTest(
+        string,
+        transitions,
+        start_state,
+        end_states
+      );
+      instance().then((viz) => {
+        grapRef.current?.appendChild(
+          viz.renderSVGElement(testResult.dotScript)
+        );
+      });
+      setIsAccepted(testResult.isAccepted);
+    }
+    if (type == "NFA") {
+      const dfa = nfaToDfa({
+        transitions,
+        start_state,
+        end_states,
+        symbols,
+        states,
+      });
+      const testResult = stringTest(
+        string,
+        dfa.transitions,
+        dfa.start_state,
+        dfa.end_states
+      );
+      instance().then((viz) => {
+        grapRef.current?.appendChild(
+          viz.renderSVGElement(testResult.dotScript)
+        );
+      });
+      setIsAccepted(testResult.isAccepted);
+    }
     setOpen(true);
   };
   return (
