@@ -179,7 +179,7 @@ const FA = ({ params }) => {
           </button>
         </div>
         <div className="border border-gray-300 my-3" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3">
           <div>
             <div className="my-2">
               <label
@@ -255,14 +255,14 @@ const FA = ({ params }) => {
               <table className="w-full table-fixed border border-collaps">
                 <thead>
                   <tr className="text-center">
-                    <th className="border border-slate-300 md:w-44 w-36 p-2 text-black">
+                    <th className="border border-slate-300 md:w-44 w-28 p-1 md:p-2 text-black">
                       Transitions
                     </th>
                     {symbols?.map((symbol, index) => {
                       return (
                         <td
                           key={index}
-                          className=" w-44 border border-slate-300 text-black"
+                          className=" w-36 md:w-44 border border-slate-300 text-black"
                         >
                           {symbol}
                         </td>
@@ -277,14 +277,14 @@ const FA = ({ params }) => {
                         key={index}
                         className="border border-slate-300 w-full text-center"
                       >
-                        <td className="border border-slate-300 w-44 p-3 text-black">
+                        <td className="border border-slate-300 p-3 text-black">
                           {state}
                         </td>
                         {symbols?.map((symbol, index) => {
                           return (
                             <td
                               key={index}
-                              className="border border-slate-300 w-44 p-3"
+                              className="border border-slate-300 p-3"
                             >
                               <MultipleSelection
                                 options={states}

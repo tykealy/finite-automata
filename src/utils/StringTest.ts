@@ -35,10 +35,14 @@ function transitionsToDotScript(transitions:any, start:any, end:any,visitedState
     if (end.indexOf(node) != -1) {
       if(visitedStates.includes(node)){
         dotScript += `  ${node} [shape = doublecircle, label=<<font color="white">${node}</font>>, style="filled", fillcolor="${node==lastState?(isAccepted? isAcceptedColor:""):("#35A29F")}"]\n`;
+      }else{
+        dotScript += `  ${node} [shape = doublecircle, label=<<font color="black">${node}</font>>]\n`;
       }
     } else {
       if(visitedStates.includes(node)){
       dotScript += `    ${node} [label=<<font color="white">${node}</font>>style="filled", fillcolor="${node==lastState?(isAccepted?"":isNotAcceptedColor):("#35A29F")}"]\n`;
+    }else{
+      dotScript += `    ${node} [label="${node}"]\n`;
     }
     }
   }
