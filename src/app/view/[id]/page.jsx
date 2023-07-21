@@ -206,7 +206,7 @@ const FA = ({ params }) => {
                 htmlFor="alphabets"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Alphabets
+                Symbols
               </label>
               <input
                 required
@@ -240,7 +240,7 @@ const FA = ({ params }) => {
                   htmlFor="end_states"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  End States
+                  Final States
                 </label>
                 <MultipleSelection
                   options={states}

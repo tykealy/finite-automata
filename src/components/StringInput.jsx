@@ -15,10 +15,58 @@ const StringInput = ({
   const [string, setString] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [isAccepted, setIsAccepted] = React.useState();
+  const [fa, setFa] = React.useState();
   const grapRef = React.useRef();
-
-  const handleTest = (e) => {
-    e.preventDefault();
+  const tableConstructor = (fa) => {
+    return (
+      <div className="border border-slate-300 w-full overflow-auto">
+        <table className="w-full table-fixed border border-collaps">
+          <thead>
+            <tr className="text-center">
+              <th className="border border-slate-300 md:w-44 w-36 p-2 text-black">
+                Transitions
+              </th>
+              {fa?.symbols?.map((symbol, index) => {
+                return (
+                  <td
+                    key={index}
+                    className=" w-44 border border-slate-300 text-black"
+                  >
+                    {symbol}
+                  </td>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {fa?.states?.map((state, index) => {
+              return (
+                <tr
+                  key={index}
+                  className="border border-slate-300 w-full text-center"
+                >
+                  <td className="border border-slate-300 w-44 p-3 text-black">
+                    {state}
+                  </td>
+                  {fa?.symbols?.map((symbol, index) => {
+                    return (
+                      <td
+                        key={index}
+                        className="border border-slate-300 w-44 p-3"
+                      >
+                        {fa?.transitions?.[state]?.[symbol]?.join(",")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+  const handleTest = () => {
     const type = checkDFAorNFA(transitions);
     if (type == "DFA") {
       const testResult = stringTest(
@@ -27,6 +75,7 @@ const StringInput = ({
         start_state,
         end_states
       );
+      setFa({ transitions, start_state, end_states, symbols, states });
       instance().then((viz) => {
         grapRef.current?.appendChild(
           viz.renderSVGElement(testResult.dotScript)
@@ -42,6 +91,7 @@ const StringInput = ({
         symbols,
         states,
       });
+      setFa(dfa);
       const testResult = stringTest(
         string,
         dfa.transitions,
@@ -58,7 +108,12 @@ const StringInput = ({
     setOpen(true);
   };
   return (
-    <form onSubmit={handleTest}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleTest();
+      }}
+    >
       <div className="text-black w-full border rounded-lg shadow-lg shadow-black-400 px-5 pt-5">
         <div className=" text-md">Test if a string is accepted.</div>
         <input
@@ -89,7 +144,7 @@ const StringInput = ({
             unmount: { scale: 0.9, y: -100 },
           }}
         >
-          <DialogHeader>{`${string} is${
+          <DialogHeader>{`"${string}" is${
             isAccepted ? " accpeted" : "n't accepted"
           } by the FA`}</DialogHeader>
           <DialogBody divider className="h-[40rem] overflow-scroll">
@@ -102,51 +157,7 @@ const StringInput = ({
                 className="my-10"
                 style={{ display: "flex", justifyContent: "center" }}
               ></div>
-              <div className="border border-slate-300 w-full overflow-auto">
-                <table className="w-full table-fixed border border-collaps">
-                  <thead>
-                    <tr className="text-center">
-                      <th className="border border-slate-300 md:w-44 w-36 p-2 text-black">
-                        Transitions
-                      </th>
-                      {symbols?.map((symbol, index) => {
-                        return (
-                          <td
-                            key={index}
-                            className=" w-44 border border-slate-300 text-black"
-                          >
-                            {symbol}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {states?.map((state, index) => {
-                      return (
-                        <tr
-                          key={index}
-                          className="border border-slate-300 w-full text-center"
-                        >
-                          <td className="border border-slate-300 w-44 p-3 text-black">
-                            {state}
-                          </td>
-                          {symbols.map((symbol, index) => {
-                            return (
-                              <td
-                                key={index}
-                                className="border border-slate-300 w-44 p-3"
-                              >
-                                {transitions?.[state]?.[symbol]?.join(",")}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              {tableConstructor(fa)}
             </div>
           </DialogBody>
         </Dialog>

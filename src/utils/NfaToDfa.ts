@@ -85,7 +85,7 @@ function nfaToDfa(fa: any): any {
         type: "dfa",
         transitions: null,
         symbols: null,
-        state: null,
+        states: null,
         end_states: null,
         start_state: null
     };
@@ -186,7 +186,7 @@ function nfaToDfa(fa: any): any {
         }
     }
 
-    dfa.state = dfaStates;
+    dfa.states = dfaStates;
     dfa.symbols = dfaSymbols;
     dfa.transitions = dfaTransitions;
     dfa.end_states = dfaEndStates;

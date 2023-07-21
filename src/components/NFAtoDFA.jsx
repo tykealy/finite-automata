@@ -103,7 +103,7 @@ const NFAtoDFA = ({
           <DialogHeader>Convert NFA to DFA</DialogHeader>
           <DialogBody divider className="h-[40rem] overflow-scroll">
             <div className="">
-              <div>{`States: { ${convertedFA.state}}`}</div>
+              <div>{`States: { ${convertedFA.states}}`}</div>
               <div>{`Symbols: { ${convertedFA.symbols} }`}</div>
               <div>{`Finale State: { ${convertedFA.end_states} }`}</div>
               <div
@@ -131,7 +131,7 @@ const NFAtoDFA = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {convertedFA?.state?.map((state, index) => {
+                    {convertedFA?.states?.map((state, index) => {
                       return (
                         <tr
                           key={index}
