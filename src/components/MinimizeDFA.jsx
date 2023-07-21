@@ -11,6 +11,7 @@ const MinimizeDFA = ({ fa }) => {
       <button
         className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
         onClick={(e) => {
+          console.log(process.env.NEXT_PUBLIC_APP_ID);
           e.preventDefault();
           const type = checkDFAorNFA(fa?.transitions);
           if (type == "NFA") {
