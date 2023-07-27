@@ -1,4 +1,4 @@
-import minimizeDfa from "@/utils/MinimizeDfa";
+import showDfa from "@/utils/MinimizeDfa-v2";
 import checkDFAorNFA from "@/utils/CheckDFAorNFA";
 import Swal from "sweetalert2";
 const MinimizeDFA = ({ fa }) => {
@@ -18,7 +18,8 @@ const MinimizeDFA = ({ fa }) => {
               icon: "error",
               title: "Oops... This isn't DFA!",
             });
-            return;
+            } else {
+              console.log(showDfa);
           }
         }}
       >
