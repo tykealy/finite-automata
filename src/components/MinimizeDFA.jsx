@@ -10,7 +10,7 @@ const MinimizeDFA = (fa) => {
       <button
         className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
         onClick={() => {
-          const minimize = minimizeDfa(fa);
+          const minimize = minimizeDfa(fa.dfa);
           console.log(minimize);
         }}
       >

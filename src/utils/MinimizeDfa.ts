@@ -1,6 +1,3 @@
-// const dfa = {"name":"Kuycheu","type":"dfa","transitions":{"q_prime_0":{"a":["q_prime_0"],"b":["q_prime_1"]},"q_prime_1":{"a":["q_prime_2"],"b":["q_prime_3"]},"q_prime_2":{"a":["q_prime_0"],"b":["q_prime_1"]},"q_prime_3":{"a":["q_prime_4"],"b":["q_prime_3"]},"q_prime_4":{"a":["q_prime_0"],"b":["q_prime_3"]}},"symbols":["a","b"],"state":["q_prime_0","q_prime_1","q_prime_2","q_prime_3","q_prime_4"],"end_states":["q_prime_1","q_prime_3"],"start_state":"q_prime_0"};
-const dfa = {"transitions":{"q3":{"a":["q2"]},"q2":{"a":["q2"]},"q0":{"a":["q1"]},"q1":{"a":["q2"]}},"start_state":"q0","symbols":["a"],"type":"DFA","end_states":["q2"],"name":"Unreachable q3","state":["q0","q1","q2","q3"]}
-
 function matrixRepresentation(dfa: any, stateMatrix: any) {
   let colString = '';
   colString += '   ';
@@ -193,11 +190,20 @@ function checkUnreachableStates(dfa: any): string[] {
       // For each state that can be reached from current state
       // via any symbol's transition, if that state is not visited yet
       // recursively call DFS for it
-      for (const symbol of dfa.symbols) {
-        const nextState = dfa.transitions[state][symbol];
-          if (!visited.includes(nextState)) {
-            DFS(nextState);
-          }
+
+      const currentStateTransitions = dfa.transitions[state];
+      console.log('currentStateTransitions: ');
+      console.log(currentStateTransitions);
+
+      if(currentStateTransitions) {
+        for (const symbol of dfa.symbols) {
+          console.log('Hello: ');
+          console.log(dfa.transitions[state][symbol]);    
+          const nextState = dfa.transitions[state][symbol];
+            if (!visited.includes(nextState)) {
+              DFS(nextState);
+            }
+        }
       }
     }
   
@@ -208,6 +214,17 @@ function checkUnreachableStates(dfa: any): string[] {
     const unreachableStates = dfa['state'].filter(state => !visited.includes(state));
   
     return unreachableStates;
+}
+
+// Function: Check if array includes an element
+function array_includes(array: any, element: any) {
+  for (const item of array) {
+    if (item === element) {
+      return true;
+    }
+
+    return false;
+  }
 }
 
 // Declare removeUnreachableStates function with unreachableStates and dfa parameters
@@ -227,6 +244,11 @@ function preprocessDfa(dfa: any) {
 
   let newDfa = (JSON.parse(JSON.stringify(dfa)));
 
+  console.log('Before Preprocess:');
+  console.log(dfa.state);
+  console.log(dfa);
+  console.log(JSON.stringify(dfa));
+
   // Sort dfa.state
   dfa.state.sort();
 
@@ -238,6 +260,20 @@ function preprocessDfa(dfa: any) {
   }
 
   // return newDfa;
+  return newDfa;
+}
+
+// Function: processed dfa
+function processedDfa(dfa: any) {
+  let newDfa = (JSON.parse(JSON.stringify(dfa)));
+  
+  // Convert all transition elements from string to array
+  for (const state in dfa.transitions) {
+    for (const symbol in dfa.transitions[state]) {
+      newDfa.transitions[state][symbol] = [dfa.transitions[state][symbol]];
+    }
+  }
+
   return newDfa;
 }
 
@@ -310,12 +346,32 @@ function minimizeDfa(dfa: any){
   // Get minimized dfa transitions
   minimizedDfaTransitions = getMinimizedTransitionFunction(preprocessedDfa, newStatePairs, minimizedDfaState);
 
+  // Get Start State
+  for (const state in newStatePairs) {
+    if (array_includes(newStatePairs[state], preprocessedDfa.start_state)) {
+      minimizedDfaStartState = state;
+      break;
+    }
+  }
+
+  // Get End States
+  for (const state in newStatePairs) {
+    for (const oldEndState of preprocessedDfa.end_states) {
+      if (newStatePairs[state].includes(oldEndState)) {
+        minimizedDfaEndStates.push(state);
+        break;
+      }
+    }
+  }
+
   minimizedDfa.transitions = minimizedDfaTransitions;
   minimizedDfa.state = minimizedDfaState;
   minimizedDfa.end_states = minimizedDfaEndStates;
   minimizedDfa.start_state = minimizedDfaStartState;
+
+  const processedMinimizedDfa = processedDfa(minimizedDfa);
     
-  return minimizedDfa;
+  return processedMinimizedDfa;
 }
 
 export default minimizeDfa;
