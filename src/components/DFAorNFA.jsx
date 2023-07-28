@@ -24,7 +24,7 @@ const DFAorNFA = ({
       if (end.indexOf(node) != -1) {
         dotScript += `    ${node} [shape = doublecircle, label="${node}"]\n`;
       } else {
-        dotScript += `    ${node} [label="${node}"]\n`;
+        dotScript += `    ${node} [shape = circle, label="${node}"]\n`;
       }
     }
 

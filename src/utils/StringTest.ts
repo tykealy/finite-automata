@@ -47,9 +47,9 @@ function transitionsToDotScript(transitions:any, start:any, end:any,visitedState
       }
     } else {
       if(visitedStates.includes(node)){
-      dotScript += `    ${node} [label=<<font color="white">${node}</font>>style="filled", fillcolor="${node==lastState?(isAccepted?"":isNotAcceptedColor):("#35A29F")}"]\n`;
+      dotScript += `    ${node} [shape = circle, label=<<font color="white">${node}</font>>style="filled", fillcolor="${node==lastState?(isAccepted?"":isNotAcceptedColor):("#35A29F")}"]\n`;
     }else{
-      dotScript += `    ${node} [label="${node}"]\n`;
+      dotScript += `    ${node} [shape = circle, label="${node}"]\n`;
     }
     }
   }

@@ -16,6 +16,7 @@ const StringInput = ({
   const [open, setOpen] = React.useState(false);
   const [isAccepted, setIsAccepted] = React.useState();
   const [fa, setFa] = React.useState();
+  const [type, setType] = React.useState();
   const grapRef = React.useRef();
   const tableConstructor = (fa) => {
     return (
@@ -68,6 +69,7 @@ const StringInput = ({
   };
   const handleTest = () => {
     const type = checkDFAorNFA(transitions);
+    setType(type);
     if (type == "DFA") {
       const testResult = stringTest(
         string,
@@ -152,6 +154,13 @@ const StringInput = ({
               <div>{`States: { ${states} }`}</div>
               <div>{`Symbols: { ${symbols} }`}</div>
               <div>{`Finale State: { ${end_states} }`}</div>
+              {type == "NFA" && (
+                <div>
+                  {
+                    "Since the FA is an NFA we converted it to DFA before string test."
+                  }
+                </div>
+              )}
               <div
                 ref={grapRef}
                 className="my-10"
