@@ -19,7 +19,11 @@ function arrayExistsAsObjectValue(targetObject: any, arrayParam: any) {
     return null;
 }
 
-// function to remove duplicates from an array
+/**
+ * @param array e.g. [1, 2, 2, 3, 4, 5, 5, 6, 7, 8, 9, 10]
+ * @description This function will return an array without duplicates
+ * @returns e.g. [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ */
 function removeDuplicates(array: any): any {
     let tmpArray = [];
     array.forEach((element: any) => {
@@ -30,7 +34,12 @@ function removeDuplicates(array: any): any {
     return tmpArray;
 }
 
-// function to get the epsilon closure of a state
+/**
+ * @param fa e.g. {"type":"","transitions":{"q2":{"a":["q1"],"ε":[],"b":["q0"]},"q1":{"b":[],"ε":["q2"],"a":["q1"]},"q0":{"b":["q0"],"ε":["q1"],"a":[]}},"symbols":["a","b","ε"],"start_state":"q0","name":"q0q1q2 Valid ","end_states":["q2"],"state":["q0","q1","q2"]}
+ * @param state e.g. q0
+ * @description This function will return the epsilon closure of a state, if there is no epsilon transition, it will return the original state
+ * @returns e.g. [ 'q0', 'q1', 'q2' ]
+ */
 function epsilon_closure(fa: any, state: any): any {
     let epsilonClosure = [];
 
@@ -50,10 +59,17 @@ function epsilon_closure(fa: any, state: any): any {
         epsilonClosure = removeDuplicates(epsilonClosure);
         return epsilonClosure;
     } else {
+        // return the original state, if there is no epsilon transition
         return [state];
     }
 }
 
+/**
+ * @param fa e.g. {"type":"","transitions":{"q2":{"a":["q1"],"ε":[],"b":["q0"]},"q1":{"b":[],"ε":["q2"],"a":["q1"]},"q0":{"b":["q0"],"ε":["q1"],"a":[]}},"symbols":["a","b","ε"],"start_state":"q0","name":"q0q1q2 Valid ","end_states":["q2"],"state":["q0","q1","q2"]}
+ * @param state e.g. 'q0'
+ * @param symbol e.g. 'a'
+ * @returns e.g. ['q1', 'q2']
+ */
 function transition_function(fa: any, state: any, symbol: any): any {
     let transitions = [];
 
@@ -73,7 +89,11 @@ function transition_function(fa: any, state: any, symbol: any): any {
     return transitions;
 }
 
-// function convert to dfa, take {} as a parameter
+/**
+ * 
+ * @param fa e.g. {"type":"","transitions":{"q2":{"a":["q1"],"ε":[],"b":["q0"]},"q1":{"b":[],"ε":["q2"],"a":["q1"]},"q0":{"b":["q0"],"ε":["q1"],"a":[]}},"symbols":["a","b","ε"],"start_state":"q0","name":"q0q1q2 Valid ","end_states":["q2"],"state":["q0","q1","q2"]}
+ * @returns e.g. {"name":"q0q1q2 Valid ","type":"dfa","transitions":{"q_prime_0":{"a":["q_prime_1"],"b":["q_prime_0"]},"q_prime_1":{"a":["q_prime_1"],"b":["q_prime_0"]},"q_prime_2":{"a":["q_prime_1"],"b":["q_prime_0"]}},"symbols":["a","b"],"state":["q_prime_0","q_prime_1","q_prime_2"],"end_states":["q_prime_2"],"start_state":"q_prime_0"}
+ */
 function nfaToDfa(fa: any): any {
 
     let endOfDfa = false;
@@ -90,7 +110,7 @@ function nfaToDfa(fa: any): any {
         start_state: null
     };
 
-    let dfaNfaRelation = {};
+    let dfaNfaRelation = {}; // dfaNfaRelation is a dictionary that holds the relation between the dfa states and the nfa states
     let dfaTransitions = {};
     let dfaSymbols = fa.symbols.filter((symbol: any) => symbol !== epsilon);
     let dfaStates = [];
@@ -109,7 +129,7 @@ function nfaToDfa(fa: any): any {
 
     // Loop through the dfa states
     do {
-        // Declare temporary dfaNfaRelation to be a deep copy of the dfaNfaRelation  
+        // Declare temporary dfaNfaRelation to be a deep copy of the dfaNfaRelation
         const tmpDfaNfaRelation = JSON.parse(JSON.stringify(dfaNfaRelation));
 
         // Do transitions on the dfaNfaRelation

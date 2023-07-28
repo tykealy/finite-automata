@@ -13,7 +13,6 @@ const dfa = {
     "name": "Unreachable q3",
     "state": ["q0", "q1", "q2", "q3"]
 }
-
 function matrixRepresentation(dfa: any, stateMatrix: any) {
     let colString = '';
     colString += '   ';
@@ -200,18 +199,27 @@ function checkUnreachableStates(dfa: any): string[] {
 
     // Depth First Search (DFS) function
     function DFS(state: string) {
-        // Mark state as visited
-        visited.push(state);
+      // Mark state as visited
+      visited.push(state);
+      
+      // For each state that can be reached from current state
+      // via any symbol's transition, if that state is not visited yet
+      // recursively call DFS for it
 
-        // For each state that can be reached from current state
-        // via any symbol's transition, if that state is not visited yet
-        // recursively call DFS for it
+      const currentStateTransitions = dfa.transitions[state];
+      console.log('currentStateTransitions: ');
+      console.log(currentStateTransitions);
+
+      if(currentStateTransitions) {
         for (const symbol of dfa.symbols) {
-            const nextState = dfa.transitions[state][symbol];
+          console.log('Hello: ');
+          console.log(dfa.transitions[state][symbol]);    
+          const nextState = dfa.transitions[state][symbol];
             if (!visited.includes(nextState)) {
-                DFS(nextState);
+              DFS(nextState);
             }
         }
+      }
     }
 
     // Start DFS from start state
@@ -221,6 +229,17 @@ function checkUnreachableStates(dfa: any): string[] {
     const unreachableStates = dfa['state'].filter(state => !visited.includes(state));
 
     return unreachableStates;
+}
+
+// Function: Check if array includes an element
+function array_includes(array: any, element: any) {
+  for (const item of array) {
+    if (item === element) {
+      return true;
+    }
+
+    return false;
+  }
 }
 
 // Declare removeUnreachableStates function with unreachableStates and dfa parameters
@@ -239,9 +258,13 @@ function removeStates(dfa: any, states: string[]) {
 function preprocessDfa(dfa: any) {
 
     let newDfa = (JSON.parse(JSON.stringify(dfa)));
+  console.log('Before Preprocess:');
+  console.log(dfa.state);
+  console.log(dfa);
+  console.log(JSON.stringify(dfa));
 
-    // Sort dfa.state
-    dfa.state.sort();
+  // Sort dfa.state
+  dfa.state.sort();
 
     // Convert all transition elements from array to string
     for (const state in dfa.transitions) {
@@ -252,6 +275,20 @@ function preprocessDfa(dfa: any) {
 
     // return newDfa;
     return newDfa;
+}
+
+// Function: processed dfa
+function processedDfa(dfa: any) {
+  let newDfa = (JSON.parse(JSON.stringify(dfa)));
+  
+  // Convert all transition elements from string to array
+  for (const state in dfa.transitions) {
+    for (const symbol in dfa.transitions[state]) {
+      newDfa.transitions[state][symbol] = [dfa.transitions[state][symbol]];
+    }
+  }
+
+  return newDfa;
 }
 
 // Minize Dfa Funtion
@@ -327,8 +364,32 @@ function minimizeDfa(dfa: any) {
     minimizedDfa.state = minimizedDfaState;
     minimizedDfa.end_states = minimizedDfaEndStates;
     minimizedDfa.start_state = minimizedDfaStartState;
+  // Get Start State
+  for (const state in newStatePairs) {
+    if (array_includes(newStatePairs[state], preprocessedDfa.start_state)) {
+      minimizedDfaStartState = state;
+      break;
+    }
+  }
 
-    return minimizedDfa;
+  // Get End States
+  for (const state in newStatePairs) {
+    for (const oldEndState of preprocessedDfa.end_states) {
+      if (newStatePairs[state].includes(oldEndState)) {
+        minimizedDfaEndStates.push(state);
+        break;
+      }
+    }
+  }
+
+  minimizedDfa.transitions = minimizedDfaTransitions;
+  minimizedDfa.state = minimizedDfaState;
+  minimizedDfa.end_states = minimizedDfaEndStates;
+  minimizedDfa.start_state = minimizedDfaStartState;
+
+  const processedMinimizedDfa = processedDfa(minimizedDfa);
+    
+  return processedMinimizedDfa;
 }
 
 export default minimizeDfa;
