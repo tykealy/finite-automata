@@ -139,7 +139,7 @@ const StringInput = ({
           handler={() => {
             setOpen(!open);
           }}
-          className="p-3"
+          className="p-2"
           size="lg"
           animate={{
             mount: { scale: 1, y: 0 },
@@ -149,7 +149,10 @@ const StringInput = ({
           <DialogHeader>{`"${string}" is${
             isAccepted ? " accpeted" : "n't accepted"
           } by the FA`}</DialogHeader>
-          <DialogBody divider className="h-[40rem] overflow-scroll">
+          <DialogBody
+            divider
+            className="h-[25rem] md:h-[30rem] lg:h-[33rem] xl:h-[37rem]  overflow-scroll"
+          >
             <div className="">
               <div>{`States: { ${states} }`}</div>
               <div>{`Symbols: { ${symbols} }`}</div>

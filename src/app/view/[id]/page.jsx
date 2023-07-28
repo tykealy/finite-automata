@@ -40,7 +40,6 @@ async function updateFA(
 }
 
 const FA = ({ params }) => {
-  const router = useRouter();
   const [fa, setFa] = React.useState({});
   const [faName, setFaName] = React.useState("");
   const [states, setStates] = React.useState([]);

@@ -93,7 +93,7 @@ const NFAtoDFA = ({
           handler={() => {
             setOpen(!open);
           }}
-          className="p-3"
+          className="p-2"
           size="lg"
           animate={{
             mount: { scale: 1, y: 0 },
@@ -101,7 +101,10 @@ const NFAtoDFA = ({
           }}
         >
           <DialogHeader>Convert NFA to DFA</DialogHeader>
-          <DialogBody divider className="h-[40rem] overflow-scroll">
+          <DialogBody
+            divider
+            className="h-[25rem] md:h-[30rem] lg:h-[33rem] xl:h-[37rem]  overflow-scroll"
+          >
             <div className="">
               <div>{`States: { ${convertedFA.states}}`}</div>
               <div>{`Symbols: { ${convertedFA.symbols} }`}</div>

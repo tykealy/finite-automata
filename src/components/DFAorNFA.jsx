@@ -81,6 +81,7 @@ const DFAorNFA = ({
         handler={() => {
           setOpen(!open);
         }}
+        className="p-2"
         size="lg"
         animate={{
           mount: { scale: 1, y: 0 },
@@ -88,7 +89,10 @@ const DFAorNFA = ({
         }}
       >
         <DialogHeader>This is {type}</DialogHeader>
-        <DialogBody divider className="h-[35rem] sm:h-[40rem] overflow-scroll">
+        <DialogBody
+          divider
+          className="h-[25rem] md:h-[30rem] lg:h-[33rem] xl:h-[37rem]  overflow-scroll"
+        >
           <div>
             <div>{`States: { ${states} }`}</div>
             <div>{`Symbols: { ${symbols} }`}</div>
