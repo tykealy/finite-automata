@@ -158,8 +158,8 @@ const FA = ({ params }) => {
             href="/"
             as="/"
           >
-            <ChevronLeftIcon className="h-8 w-8 text-white" />
-            <span className="mr-2 text-white">Back</span>
+            <ChevronLeftIcon className="h-8 w-6 sm:w-8 text-white" />
+            <span className="mr-2 text-white text-sm sm:text-md">Back</span>
           </Link>
           <input
             required
@@ -173,7 +173,7 @@ const FA = ({ params }) => {
           />
           <button
             type="submit"
-            className=" bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
+            className=" bg-[#182c4c] px-2 text-sm sm:text-md sm:px-3 py-1.5 border rounded-lg hover:bg-[#435f8c] text-white"
           >
             SAVE
           </button>
