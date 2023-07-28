@@ -214,6 +214,8 @@ function nfaToDfa(fa: any): any {
 
     // dfa.nfa_relation = dfaNfaRelation;
 
+    console.log(JSON.stringify(dfa));
+
     return dfa;
 }
 
