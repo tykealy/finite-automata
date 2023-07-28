@@ -141,8 +141,8 @@ const Page = () => {
             href="/"
             as="/"
           >
-            <ChevronLeftIcon className="h-8 w-8 text-white" />
-            <span className="mr-2 text-white">Back</span>
+            <ChevronLeftIcon className="h-8 w-6 sm:w-8 text-white" />
+            <span className="mr-2 text-white text-sm sm:text-md">Back</span>
           </Link>
           <input
             required
@@ -157,13 +157,13 @@ const Page = () => {
           ></input>
           <button
             type="submit"
-            className="bg-[#182c4c] px-3 py-1 border rounded-lg hover:bg-[#435f8c] text-white"
+            className="bg-[#182c4c] px-2 text-sm sm:text-md sm:px-3 py-1.5 border rounded-lg hover:bg-[#435f8c] text-white"
           >
             SAVE
           </button>
         </div>
-        <div className="border border-gray-300 my-3" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="border border-gray-300 my-2" />
+        <div className="grid grid-cols-1 lg:grid-cols-3">
           <div>
             <div className="my-2">
               <label
@@ -190,7 +190,7 @@ const Page = () => {
                 htmlFor="alphabets"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Alphabets
+                Symbols
               </label>
               <input
                 required
@@ -223,7 +223,7 @@ const Page = () => {
                   htmlFor="end_states"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  End States
+                  Final States
                 </label>
                 <MultipleSelection
                   options={states}
@@ -237,14 +237,14 @@ const Page = () => {
               <table className="w-full table-fixed border border-collaps">
                 <thead>
                   <tr>
-                    <th className="border border-slate-300 w-44 p-2 text-black">
+                    <th className="border border-slate-300 md:w-44 w-28 p-1 md:p-2 text-black">
                       Transitions
                     </th>
                     {symbols.map((symbol, index) => {
                       return (
                         <th
                           key={index}
-                          className=" w-44 border border-slate-300 text-black"
+                          className=" w-36 md:w-44 border border-slate-300 text-black"
                         >
                           {symbol}
                         </th>
@@ -259,14 +259,14 @@ const Page = () => {
                         key={index}
                         className="border border-slate-300 w-full text-center"
                       >
-                        <td className="border border-slate-300 w-44 p-3 text-black">
+                        <td className="border border-slate-300 p-3 text-black">
                           {state}
                         </td>
                         {symbols.map((symbol, index) => {
                           return (
                             <td
                               key={index}
-                              className="border border-slate-300 w-44 p-3"
+                              className="border border-slate-300 p-3"
                             >
                               <MultipleSelection
                                 options={states}

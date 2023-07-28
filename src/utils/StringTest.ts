@@ -18,6 +18,13 @@ function stringTest(symbols: string, transition: object, start_state: string, en
     }
     lastState = currentState;
   }
+
+  if(symbols.length === 0 && end_states.includes(currentState)){
+    isAccepted = true;
+    visitedStates.push(start_state);
+    lastState = start_state;
+  }
+
   const dotScript = transitionsToDotScript(transition,start_state,end_states,visitedStates,isAccepted,lastState,stringTransitions);
   return { isAccepted, stringTransitions,dotScript };
 }
@@ -35,10 +42,14 @@ function transitionsToDotScript(transitions:any, start:any, end:any,visitedState
     if (end.indexOf(node) != -1) {
       if(visitedStates.includes(node)){
         dotScript += `  ${node} [shape = doublecircle, label=<<font color="white">${node}</font>>, style="filled", fillcolor="${node==lastState?(isAccepted? isAcceptedColor:""):("#35A29F")}"]\n`;
+      }else{
+        dotScript += `  ${node} [shape = doublecircle, label=<<font color="black">${node}</font>>]\n`;
       }
     } else {
       if(visitedStates.includes(node)){
-      dotScript += `    ${node} [label=<<font color="white">${node}</font>>style="filled", fillcolor="${node==lastState?(isAccepted?"":isNotAcceptedColor):("#35A29F")}"]\n`;
+      dotScript += `    ${node} [shape = circle, label=<<font color="white">${node}</font>>style="filled", fillcolor="${node==lastState?(isAccepted?"":isNotAcceptedColor):("#35A29F")}"]\n`;
+    }else{
+      dotScript += `    ${node} [shape = circle, label="${node}"]\n`;
     }
     }
   }

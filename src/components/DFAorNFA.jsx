@@ -24,7 +24,7 @@ const DFAorNFA = ({
       if (end.indexOf(node) != -1) {
         dotScript += `    ${node} [shape = doublecircle, label="${node}"]\n`;
       } else {
-        dotScript += `    ${node} [label="${node}"]\n`;
+        dotScript += `    ${node} [shape = circle, label="${node}"]\n`;
       }
     }
 
@@ -47,37 +47,40 @@ const DFAorNFA = ({
   }
 
   return (
-    <div className="text-black w-full border rounded-lg shadow-lg shadow-black-400 px-5 pt-5">
-      <div className=" text-md">
-        Test if this FA is deterministic or non-deternimistic
+    <div>
+      <div className="text-black w-full border rounded-lg shadow-lg shadow-black-400 px-5 pt-5">
+        <div className=" text-md">
+          Test if this FA is deterministic or non-deternimistic
+        </div>
+        <div className="text-sm text-gray-500 my-2">dfa or nfa</div>
+        <button
+          className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
+          onClick={(e) => {
+            e.preventDefault();
+            const cleanedT = cleanTransitions(transitions, states, symbols);
+            setCleanedTransitions(cleanedT);
+            setType(checkDFAorNFA(cleanedT));
+            const transitionsDot = transitionsToDotScript(
+              cleanedT,
+              start_state,
+              end_states
+            );
+            instance().then((viz) => {
+              grapRef.current?.appendChild(
+                viz.renderSVGElement(transitionsDot)
+              );
+            });
+            setOpen(true);
+          }}
+        >
+          TEST
+        </button>
       </div>
-      <div className="text-sm text-gray-500 my-2">dfa or nfa</div>
-      <button
-        className="font-semibold my-2 p-2 text-sm border border-gray-400 rounded-lg"
-        onClick={(e) => {
-          e.preventDefault();
-          const cleanedT = cleanTransitions(transitions, states, symbols);
-          setCleanedTransitions(cleanedT);
-          setType(checkDFAorNFA(cleanedT));
-          const transitionsDot = transitionsToDotScript(
-            cleanedT,
-            start_state,
-            end_states
-          );
-          instance().then((viz) => {
-            grapRef.current?.appendChild(viz.renderSVGElement(transitionsDot));
-          });
-          setOpen(true);
-        }}
-      >
-        TEST
-      </button>
       <Dialog
         open={open}
         handler={() => {
           setOpen(!open);
         }}
-        className="p-3"
         size="lg"
         animate={{
           mount: { scale: 1, y: 0 },
@@ -85,8 +88,8 @@ const DFAorNFA = ({
         }}
       >
         <DialogHeader>This is {type}</DialogHeader>
-        <DialogBody divider className="h-[40rem] overflow-scroll">
-          <div className="">
+        <DialogBody divider className="h-[35rem] sm:h-[40rem] overflow-scroll">
+          <div>
             <div>{`States: { ${states} }`}</div>
             <div>{`Symbols: { ${symbols} }`}</div>
             <div>{`Finale State: { ${end_states} }`}</div>
@@ -142,17 +145,6 @@ const DFAorNFA = ({
             </div>
           </div>
         </DialogBody>
-        {/* <DialogFooter className="space-x-2">
-          <Button
-            variant="outlined"
-            color="red"
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            close
-          </Button>
-        </DialogFooter> */}
       </Dialog>
     </div>
   );
