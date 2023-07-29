@@ -21,16 +21,18 @@ function removeDuplicateElements(array: any) {
   }
 
 // Function: Find equivalent transitions (Take preprocessedDfa, statePairs, newState as parameters)
-function findEquivalentTransition(preprocessedDfa: any, statePair: any, newState: any, oldToNewStates: any) {
+function findEquivalentTransition(dfa: any, statePair: any, newState: any, oldToNewStates: any) {
     let newTransitions = {};
   
     // Get transitions from preprocessedDfa
-    const preprocessedTransitions = preprocessedDfa.transitions;
+    const dfaTransitions = dfa.transitions;
   
     // Get new transitions
-    for (const symbol of preprocessedDfa.symbols) {
+    for (const symbol of dfa.symbols) {
       const oldState = statePair[0];
-      const oldNextState = preprocessedTransitions[oldState][symbol];
+      const oldNextState = dfaTransitions[oldState][symbol];
+      console.log('oldNextState');
+      console.log(oldNextState);
       const newNextState = oldToNewStates[oldNextState];
       newTransitions[symbol] = newNextState;
     }
@@ -287,7 +289,7 @@ function getMinimizedDfaState(dfa: any, stateMatrix: any, minimizedDfaStatePrefi
  * @description This function will return the minimized dfa
  * @returns e.g. 
  */
-function minimizeDfa(dfa: any){
+function minimizeDfaV3(dfa: any){
 
     const minimizedDfaStatePrefix = 'Q_PRIME_';
     const unreachableStates = checkUnreachableStates(dfa);
@@ -391,4 +393,4 @@ function minimizeDfa(dfa: any){
 }
 
 // Export minimizeDfa function
-export { minimizeDfa };
+export default minimizeDfaV3;
