@@ -46,7 +46,14 @@ const Features = ({
           />
         </div>
         <div className="grid">
-          <MinimizeDFA fa={fa} />
+          <MinimizeDFA 
+            fa={fa}
+            transitions={transitions}
+            start_state={start_state}
+            end_states={end_states}
+            states={states}
+            symbols={symbols}
+          />
         </div>
       </div>
     </div>

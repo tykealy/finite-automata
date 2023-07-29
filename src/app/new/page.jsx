@@ -158,6 +158,17 @@ const Page = () => {
           <button
             type="submit"
             className="bg-[#182c4c] px-2 text-sm sm:text-md sm:px-3 py-1.5 border rounded-lg hover:bg-[#435f8c] text-white"
+            onClick={(e) => {
+              const fa = {
+                name: faName,
+                states: states,
+                symbols: symbols,
+                start_state: startState,
+                end_states: endStates,
+                transitions: transitions,
+              };
+              console.log(JSON.stringify(fa))
+            }}
           >
             SAVE
           </button>
