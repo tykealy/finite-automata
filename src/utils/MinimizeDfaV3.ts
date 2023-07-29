@@ -34,7 +34,7 @@ function findEquivalentTransition(dfa: any, statePair: any, newState: any, oldTo
       console.log('oldNextState');
       console.log(oldNextState);
       const newNextState = oldToNewStates[oldNextState];
-      newTransitions[symbol] = newNextState;
+      newTransitions[symbol] = [newNextState];
     }
   
     return newTransitions;
@@ -199,9 +199,6 @@ function consecutiveIteration(dfa: any, stateMatrix: any) {
  */
 function getMinimizedTransitionFunction(dfa: any, newStatePairs: any, newStates: any) {
     let newTransitions = {};
-  
-    // Copy transitions from preprocessedDfa
-    const preprocessedTransitions = dfa.transitions;
   
     // Mapping old states to new states
     let oldToNewStates = {};
