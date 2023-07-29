@@ -31,8 +31,8 @@ function findEquivalentTransition(dfa: any, statePair: any, newState: any, oldTo
     for (const symbol of dfa.symbols) {
       const oldState = statePair[0];
       const oldNextState = dfaTransitions[oldState][symbol];
-      console.log('oldNextState');
-      console.log(oldNextState);
+      // console.log('oldNextState');
+      // console.log(oldNextState);
       const newNextState = oldToNewStates[oldNextState];
       newTransitions[symbol] = [newNextState];
     }
@@ -72,7 +72,7 @@ function checkUnreachableStates(dfa: any): string[] {
         visited.push(dfa.start_state);
     }
 
-    console.log(visited);
+    // console.log(visited);
   
     // Get unreachable states
     const unreachableStates = dfa['states'].filter(state => !visited.includes(state));
@@ -114,7 +114,7 @@ function matrixRepresentation(dfa: any, stateMatrix: any) {
       colString += col + '   ';
     }
   
-    console.log(colString);
+    // console.log(colString);
   
     for (const row of dfa.states) {
       let rowString = '';
@@ -122,7 +122,7 @@ function matrixRepresentation(dfa: any, stateMatrix: any) {
         rowString += stateMatrix[row][col] ? stateMatrix[row][col] : ' ';
         rowString += '    ';
       }
-      console.log(row, rowString);
+      // console.log(row, rowString);
     }
   }
 
@@ -288,7 +288,7 @@ function getMinimizedDfaState(dfa: any, stateMatrix: any, minimizedDfaStatePrefi
  */
 function minimizeDfaV3(dfa: any){
 
-    const minimizedDfaStatePrefix = 'Q_PRIME_';
+    const minimizedDfaStatePrefix = 'Q';
     const unreachableStates = checkUnreachableStates(dfa);
 
     const removedUnreachableStates = removeStates(dfa, unreachableStates);
@@ -332,8 +332,8 @@ function minimizeDfaV3(dfa: any){
     stateMatrix = firstIteration(removedUnreachableStates, stateMatrix);
 
     // Console log state matrix
-    console.log('State matrix');
-    console.log(stateMatrix);
+    // console.log('State matrix');
+    // console.log(stateMatrix);
 
     // Show state matrix
     matrixRepresentation(removedUnreachableStates, stateMatrix);
@@ -351,7 +351,7 @@ function minimizeDfaV3(dfa: any){
 
     // Group states
     const newStatePairs = getMinimizedDfaState(removedUnreachableStates, stateMatrix, minimizedDfaStatePrefix);
-    console.log(newStatePairs);
+    // console.log(newStatePairs);
 
     // Get minimized dfa states
     minimizedDfaState = Object.keys(newStatePairs);
@@ -377,7 +377,7 @@ function minimizeDfaV3(dfa: any){
         }
     }
 
-    console.log(JSON.stringify(removedUnreachableStates));
+    // console.log(JSON.stringify(removedUnreachableStates));
 
     // Assign minimized dfa property values to minimizedDfa
     minimizedDfa.transitions = minimizedDfaTransitions;

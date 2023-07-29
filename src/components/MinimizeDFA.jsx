@@ -5,21 +5,21 @@ import { instance } from "@viz-js/viz";
 import React from "react";
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 import Swal from "sweetalert2";
-const MinimizeDFA = ({ 
+const MinimizeDFA = ({
   fa,
   transitions,
   start_state,
   end_states,
   symbols,
   states,
- }) => {
+}) => {
   const [open, setOpen] = React.useState(false);
   const [type, setType] = React.useState("");
   const [minimizedDfa, setMinimizedDfa] = React.useState({});
   const grapRef = React.useRef();
 
   function transitionsToDotScript(transitions, start, end) {
-    console.log('Transition:');
+    console.log("Transition:");
     console.log(transitions);
     let dotScript = "digraph { rankdir=LR;\n";
     // Create nodes
@@ -66,31 +66,29 @@ const MinimizeDFA = ({
               icon: "error",
               title: "Oops... This isn't DFA!",
             });
-            } else {
-              console.log(showDfa);
+          } else {
+            console.log(showDfa);
           }
-          try{
-            if(type === 'DFA'){
-              console.log('minimized dfa: ');
-              console.log(JSON.stringify(
-                {
+          try {
+            if (type === "DFA") {
+              console.log("minimized dfa: ");
+              console.log(
+                JSON.stringify({
                   transitions,
                   start_state,
                   end_states,
                   symbols,
                   states,
-                }
-              ));
-
-              const minimizedDfa = minimizeDfaV3(
-                {
-                  transitions,
-                  start_state,
-                  end_states,
-                  symbols,
-                  states,
-                }
+                })
               );
+
+              const minimizedDfa = minimizeDfaV3({
+                transitions,
+                start_state,
+                end_states,
+                symbols,
+                states,
+              });
 
               setMinimizedDfa(minimizedDfa);
 
@@ -108,90 +106,96 @@ const MinimizeDFA = ({
             }
           } catch (err) {
             console.log(err);
-            alert('Make sure you have filled all the fields correctly! All States should have valid transitions!');
+            alert(
+              "Make sure you have filled all the fields correctly! All States should have valid transitions!"
+            );
           }
         }}
       >
         Minimize
       </button>
       <Dialog
-          open={open}
-          handler={() => {
-            setOpen(!open);
-          }}
-          className="p-2"
-          size="lg"
-          animate={{
-            mount: { scale: 1, y: 0 },
-            unmount: { scale: 0.9, y: -100 },
-          }}
+        open={open}
+        handler={() => {
+          setOpen(!open);
+        }}
+        className="p-2"
+        size="lg"
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogHeader>Minimized DFA</DialogHeader>
+        <DialogBody
+          divider
+          className="h-[25rem] md:h-[30rem] lg:h-[33rem] xl:h-[37rem]  overflow-scroll"
         >
-          <DialogHeader>Minimize DFA</DialogHeader>
-          <DialogBody
-            divider
-            className="h-[25rem] md:h-[30rem] lg:h-[33rem] xl:h-[37rem]  overflow-scroll"
-          >
-            <div className="">
-              <div>{`States: { ${minimizedDfa.states}}`}</div>
-              <div>{`Symbols: { ${minimizedDfa.symbols} }`}</div>
-              <div>{`Finale State: { ${minimizedDfa.end_states} }`}</div>
-              <div>{`Relationship to the old states: { ${JSON.stringify(minimizedDfa.new_states_map_old_states)} }`}</div>
-              <div>{`Unreachable states: { ${JSON.stringify(minimizedDfa.unreachableStates)} }`}</div>
-              <div
-                ref={grapRef}
-                className="my-10"
-                style={{ display: "flex", justifyContent: "center" }}
-              ></div>
-              <div className="border border-slate-300 w-full overflow-auto">
-                <table className="w-full table-fixed border border-collaps">
-                  <thead>
-                    <tr className="text-center">
-                      <th className="border border-slate-300 md:w-44 w-36 p-2 text-black">
-                        Transitions
-                      </th>
-                      {minimizedDfa?.symbols?.map((symbol, index) => {
-                        return (
-                          <td
-                            key={index}
-                            className=" w-44 border border-slate-300 text-black"
-                          >
-                            {symbol}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {minimizedDfa?.states?.map((state, index) => {
+          <div className="">
+            <div>{`States: { ${minimizedDfa.states}}`}</div>
+            <div>{`Symbols: { ${minimizedDfa.symbols} }`}</div>
+            <div>{`Finale State: { ${minimizedDfa.end_states} }`}</div>
+            <div>{`Equivalent states: { ${JSON.stringify(
+              minimizedDfa.new_states_map_old_states
+            )} }`}</div>
+            <div>{`Unreachable states: { ${JSON.stringify(
+              minimizedDfa.unreachableStates
+            )} }`}</div>
+            <div
+              ref={grapRef}
+              className="my-10"
+              style={{ display: "flex", justifyContent: "center" }}
+            ></div>
+            <div className="border border-slate-300 w-full overflow-auto">
+              <table className="w-full table-fixed border border-collaps">
+                <thead>
+                  <tr className="text-center">
+                    <th className="border border-slate-300 md:w-44 w-36 p-2 text-black">
+                      Transitions
+                    </th>
+                    {minimizedDfa?.symbols?.map((symbol, index) => {
                       return (
-                        <tr
+                        <td
                           key={index}
-                          className="border border-slate-300 w-full text-center"
+                          className=" w-44 border border-slate-300 text-black"
                         >
-                          <td className="border border-slate-300 w-44 p-3 text-black">
-                            {state}
-                          </td>
-                          {minimizedDfa?.symbols?.map((symbol, index) => {
-                            return (
-                              <td
-                                key={index}
-                                className="border border-slate-300 w-44 p-3"
-                              >
-                                {minimizedDfa?.transitions?.[state]?.[
-                                  symbol
-                                ]?.join(",")}
-                              </td>
-                            );
-                          })}
-                        </tr>
+                          {symbol}
+                        </td>
                       );
                     })}
-                  </tbody>
-                </table>
-              </div>
+                  </tr>
+                </thead>
+                <tbody>
+                  {minimizedDfa?.states?.map((state, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="border border-slate-300 w-full text-center"
+                      >
+                        <td className="border border-slate-300 w-44 p-3 text-black">
+                          {state}
+                        </td>
+                        {minimizedDfa?.symbols?.map((symbol, index) => {
+                          return (
+                            <td
+                              key={index}
+                              className="border border-slate-300 w-44 p-3"
+                            >
+                              {minimizedDfa?.transitions?.[state]?.[
+                                symbol
+                              ]?.join(",")}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          </DialogBody>
-        </Dialog>
+          </div>
+        </DialogBody>
+      </Dialog>
     </div>
   );
 };
