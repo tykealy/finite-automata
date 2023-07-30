@@ -1,5 +1,7 @@
 ## Getting Started
 
+## White docker
+
 Build docker image
 
 ```base
@@ -25,6 +27,8 @@ docker start fa-container
 ```
 
 After starting container you can access the app at http://localhost:3000
+
+## Or you can run the app locally
 
 Install all the dependencies:
 
