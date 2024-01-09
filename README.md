@@ -1,6 +1,6 @@
 ## Getting Started
 
-## White docker
+## With docker
 
 Build docker image
 
