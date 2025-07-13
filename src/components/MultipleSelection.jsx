@@ -44,7 +44,7 @@ const MultipleSelection = ({
       });
   }, [options]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (symbol != null && state != null && transitions != null) {
       handleEndStatesChange(state, symbol, select, transitions);
       return;
@@ -52,7 +52,7 @@ const MultipleSelection = ({
     handleEndStatesChange(select);
   }, [select]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (symbol != null && state != null && transitions != null) {
       const selectedStates = transitions?.[state]?.[symbol] || [];
       setSelected(selectedStates);
