@@ -264,15 +264,15 @@ function removeStates(dfa: any, states: string[]) {
 function preprocessDfa(dfa: any) {
 
     let newDfa = (JSON.parse(JSON.stringify(dfa)));
-  if (isDev) {
-    console.log('Before Preprocess:');
-    console.log(dfa.state);
-    console.log(dfa);
-    console.log(JSON.stringify(dfa));
-  }
+    if (isDev) {
+      console.log('Before Preprocess:');
+      console.log(dfa.state);
+      console.log(dfa);
+      console.log(JSON.stringify(dfa));
+    }
 
-  // Sort dfa.state
-  dfa.state.sort();
+    // Sort dfa.state
+    dfa.state.sort();
 
     // Convert all transition elements from array to string
     for (const state in dfa.transitions) {
