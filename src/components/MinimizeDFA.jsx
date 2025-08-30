@@ -13,14 +13,17 @@ const MinimizeDFA = ({
   symbols,
   states,
 }) => {
+  const isDev = process.env.NODE_ENV === "development";
   const [open, setOpen] = React.useState(false);
   const [type, setType] = React.useState("");
   const [minimizedDfa, setMinimizedDfa] = React.useState({});
   const grapRef = React.useRef();
 
   function transitionsToDotScript(transitions, start, end) {
-    console.log("Transition:");
-    console.log(transitions);
+    if (isDev) {
+      console.log("Transition:");
+      console.log(transitions);
+    }
     let dotScript = "digraph { rankdir=LR;\n";
     // Create nodes
     dotScript += `    start [shape = "point", label="start"]\n`;
@@ -67,20 +70,22 @@ const MinimizeDFA = ({
               title: "Oops... This isn't DFA!",
             });
           } else {
-            console.log(showDfa);
+            if (isDev) console.log(showDfa);
           }
           try {
             if (type === "DFA") {
-              console.log("minimized dfa: ");
-              console.log(
-                JSON.stringify({
-                  transitions,
-                  start_state,
-                  end_states,
-                  symbols,
-                  states,
-                })
-              );
+              if (isDev) {
+                console.log("minimized dfa: ");
+                console.log(
+                  JSON.stringify({
+                    transitions,
+                    start_state,
+                    end_states,
+                    symbols,
+                    states,
+                  })
+                );
+              }
 
               const minimizedDfa = minimizeDfaV3({
                 transitions,
@@ -105,7 +110,7 @@ const MinimizeDFA = ({
               setOpen(true);
             }
           } catch (err) {
-            console.log(err);
+            if (isDev) console.error(err);
             alert(
               "Make sure you have filled all the fields correctly! All States should have valid transitions!"
             );

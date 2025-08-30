@@ -94,6 +94,8 @@ function transition_function(fa: any, state: any, symbol: any): any {
  * @param fa e.g. {"type":"","transitions":{"q2":{"a":["q1"],"ε":[],"b":["q0"]},"q1":{"b":[],"ε":["q2"],"a":["q1"]},"q0":{"b":["q0"],"ε":["q1"],"a":[]}},"symbols":["a","b","ε"],"start_state":"q0","name":"q0q1q2 Valid ","end_states":["q2"],"state":["q0","q1","q2"]}
  * @returns e.g. {"name":"q0q1q2 Valid ","type":"dfa","transitions":{"q_prime_0":{"a":["q_prime_1"],"b":["q_prime_0"]},"q_prime_1":{"a":["q_prime_1"],"b":["q_prime_0"]},"q_prime_2":{"a":["q_prime_1"],"b":["q_prime_0"]}},"symbols":["a","b"],"state":["q_prime_0","q_prime_1","q_prime_2"],"end_states":["q_prime_2"],"start_state":"q_prime_0"}
  */
+const isDev = process.env.NODE_ENV === 'development';
+
 function nfaToDfa(fa: any): any {
 
     let endOfDfa = false;
@@ -214,7 +216,9 @@ function nfaToDfa(fa: any): any {
 
     // dfa.nfa_relation = dfaNfaRelation;
 
-    console.log(JSON.stringify(dfa));
+    if (isDev) {
+        console.log(JSON.stringify(dfa));
+    }
 
     return dfa;
 }

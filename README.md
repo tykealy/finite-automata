@@ -52,6 +52,8 @@ Before running this application, you need to set up a Firebase project:
    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+   # Firebase App Check (reCAPTCHA v3)
+   NEXT_PUBLIC_FIREBASE_APPCHECK_SITE_KEY=your_recaptcha_v3_site_key
    ```
 
 5. **Enable Firebase services (optional):**
@@ -118,3 +120,4 @@ This project uses the following environment variables (defined in `.env`):
 - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`: Your Firebase messaging sender ID
 - `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID
 - `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`: Your Firebase measurement ID
+- `NEXT_PUBLIC_FIREBASE_APPCHECK_SITE_KEY`: Your Firebase App Check reCAPTCHA v3 site key

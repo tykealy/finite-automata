@@ -258,17 +258,19 @@ function combineFinalAndNonFinalStates(finalDfa, nonFinalDfa) {
     };
 }
 
+const isDev = process.env.NODE_ENV === 'development';
+
 function minimizeDfa(dfa) {
     const {finalDfa, nonFinalDfa} = divideFinalAndNonFinalStates(removeUnreachableStates(dfa));
 
-
-    console.log("before remove")
-    console.log(finalDfa);
-    console.log(nonFinalDfa);
-
-    console.log("after remove")
-    console.log(removeSameTransitionStates(finalDfa));
-    console.log(removeSameTransitionStates(nonFinalDfa));
+    if (isDev) {
+        console.log("before remove");
+        console.log(finalDfa);
+        console.log(nonFinalDfa);
+        console.log("after remove");
+        console.log(removeSameTransitionStates(finalDfa));
+        console.log(removeSameTransitionStates(nonFinalDfa));
+    }
 
     return combineFinalAndNonFinalStates(removeSameTransitionStates(finalDfa), removeSameTransitionStates(nonFinalDfa));
 }

@@ -1,12 +1,12 @@
 "use client";
-import "../../../../firebaseConfig";
+import { appCheckReadyPromise } from "../../../../firebaseConfig";
 import Link from "next/link";
 import React from "react";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import MultipleSelection from "@/components/MultipleSelection";
 import SingleSelection from "@/components/SingleSelection";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Features from "@/components/Features";
 import Swal from "sweetalert2";
 import checkDFAorNFA from "@/utils/CheckDFAorNFA";
@@ -21,6 +21,7 @@ async function updateFA(
   type,
   id
 ) {
+  await appCheckReadyPromise;
   const firestore = getFirestore();
   const data = {
     name: name,
@@ -35,11 +36,15 @@ async function updateFA(
   try {
     await updateDoc(docRef, data);
   } catch (error) {
-    console.log(error);
+    if (process.env.NODE_ENV === "development") {
+      console.error(error);
+    }
   }
 }
 
-const FA = ({ params }) => {
+const FA = () => {
+  const params = useParams();
+  const id = params?.id;
   const [fa, setFa] = React.useState({});
   const [faName, setFaName] = React.useState("");
   const [states, setStates] = React.useState([]);
@@ -49,6 +54,7 @@ const FA = ({ params }) => {
   const [transitions, setTransitions] = React.useState({});
 
   async function getFa(param) {
+    await appCheckReadyPromise;
     const firestore = getFirestore();
     const docRef = doc(firestore, "automata", param);
     const fa = await getDoc(docRef);
@@ -56,16 +62,37 @@ const FA = ({ params }) => {
   }
 
   React.useEffect(() => {
-    getFa(params.id);
-  }, []);
+    if (!id) return;
+    getFa(id);
+  }, [id]);
 
   React.useEffect(() => {
-    setFaName(fa.name);
-    setStates(fa.state);
-    setSymbols(fa.symbols);
-    setStartState(fa.start_state);
-    setEndStates(fa.end_states);
-    setTransitions(fa.transitions);
+    setFaName(typeof fa?.name === "string" ? fa.name : "");
+    setStates(
+      Array.isArray(fa?.state)
+        ? fa.state
+        : typeof fa?.state === "string"
+        ? fa.state.split(",")
+        : []
+    );
+    setSymbols(
+      Array.isArray(fa?.symbols)
+        ? fa.symbols
+        : typeof fa?.symbols === "string"
+        ? fa.symbols.split(",")
+        : []
+    );
+    setStartState(typeof fa?.start_state === "string" ? fa.start_state : "");
+    setEndStates(
+      Array.isArray(fa?.end_states)
+        ? fa.end_states
+        : typeof fa?.end_states === "string"
+        ? fa.end_states.split(",")
+        : []
+    );
+    setTransitions(
+      fa?.transitions && typeof fa.transitions === "object" ? fa.transitions : {}
+    );
   }, [fa]);
 
   React.useEffect(() => {
@@ -132,7 +159,7 @@ const FA = ({ params }) => {
       endStates,
       transitions,
       type,
-      params.id
+      id
     )
       .then(() => {
         Swal.fire({
@@ -189,7 +216,7 @@ const FA = ({ params }) => {
               </label>
               <input
                 required
-                value={states}
+                value={Array.isArray(states) ? states.join(",") : states || ""}
                 onChange={(e) => {
                   e.preventDefault();
                   handleStateArray(e.target.value);
@@ -209,7 +236,7 @@ const FA = ({ params }) => {
               </label>
               <input
                 required
-                value={symbols}
+                value={Array.isArray(symbols) ? symbols.join(",") : symbols || ""}
                 onChange={(e) => {
                   e.preventDefault();
                   handleAlphabetArray(e.target.value);
