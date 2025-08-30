@@ -1,4 +1,6 @@
 // const dfa = {"name":"Kuycheu","type":"dfa","transitions":{"q_prime_0":{"a":["q_prime_0"],"b":["q_prime_1"]},"q_prime_1":{"a":["q_prime_2"],"b":["q_prime_3"]},"q_prime_2":{"a":["q_prime_0"],"b":["q_prime_1"]},"q_prime_3":{"a":["q_prime_4"],"b":["q_prime_3"]},"q_prime_4":{"a":["q_prime_0"],"b":["q_prime_3"]}},"symbols":["a","b"],"state":["q_prime_0","q_prime_1","q_prime_2","q_prime_3","q_prime_4"],"end_states":["q_prime_1","q_prime_3"],"start_state":"q_prime_0"};
+const isDev = process.env.NODE_ENV === 'development';
+
 const dfa = {
     "transitions": {
         "q3": {"a": ["q2"]}, 
@@ -21,7 +23,7 @@ function matrixRepresentation(dfa: any, stateMatrix: any) {
         colString += col + '   ';
     }
 
-    console.log(colString);
+    if (isDev) console.log(colString);
 
     for (const row of dfa.state) {
         let rowString = '';
@@ -29,7 +31,7 @@ function matrixRepresentation(dfa: any, stateMatrix: any) {
             rowString += stateMatrix[row][col] ? stateMatrix[row][col] : ' ';
             rowString += '    ';
         }
-        console.log(row, rowString);
+        if (isDev) console.log(row, rowString);
     }
 }
 
@@ -207,13 +209,17 @@ function checkUnreachableStates(dfa: any): string[] {
       // recursively call DFS for it
 
       const currentStateTransitions = dfa.transitions[state];
-      console.log('currentStateTransitions: ');
-      console.log(currentStateTransitions);
+      if (isDev) {
+        console.log('currentStateTransitions: ');
+        console.log(currentStateTransitions);
+      }
 
       if(currentStateTransitions) {
         for (const symbol of dfa.symbols) {
-          console.log('Hello: ');
-          console.log(dfa.transitions[state][symbol]);    
+          if (isDev) {
+            console.log('Hello: ');
+            console.log(dfa.transitions[state][symbol]);
+          }
           const nextState = dfa.transitions[state][symbol];
             if (!visited.includes(nextState)) {
               DFS(nextState);
@@ -258,13 +264,15 @@ function removeStates(dfa: any, states: string[]) {
 function preprocessDfa(dfa: any) {
 
     let newDfa = (JSON.parse(JSON.stringify(dfa)));
-  console.log('Before Preprocess:');
-  console.log(dfa.state);
-  console.log(dfa);
-  console.log(JSON.stringify(dfa));
+    if (isDev) {
+      console.log('Before Preprocess:');
+      console.log(dfa.state);
+      console.log(dfa);
+      console.log(JSON.stringify(dfa));
+    }
 
-  // Sort dfa.state
-  dfa.state.sort();
+    // Sort dfa.state
+    dfa.state.sort();
 
     // Convert all transition elements from array to string
     for (const state in dfa.transitions) {

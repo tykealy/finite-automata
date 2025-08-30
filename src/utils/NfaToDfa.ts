@@ -2,6 +2,7 @@
 const dfa_prefix = "Q";
 // delcare epsilon close symbol
 const epsilon = "ε";
+const isDev = process.env.NODE_ENV === 'development';
 
 function arrayExistsAsObjectValue(targetObject: any, arrayParam: any) {
     const sortedArrayParam = JSON.stringify(arrayParam.sort());
@@ -214,7 +215,9 @@ function nfaToDfa(fa: any): any {
 
     // dfa.nfa_relation = dfaNfaRelation;
 
-    console.log(JSON.stringify(dfa));
+    if (isDev) {
+        console.log(JSON.stringify(dfa));
+    }
 
     return dfa;
 }

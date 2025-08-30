@@ -1,13 +1,36 @@
+"use client";
 import React from "react";
 import Link from "next/link";
-import "./../../firebaseConfig";
+import { appCheckReadyPromise } from "./../../firebaseConfig";
 import { TrashIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { collection, getDocs, getFirestore, query } from "firebase/firestore";
 
-export default async function Page() {
-  const firestore = getFirestore();
-  const q = query(collection(firestore, "automata"));
-  const fas = await getDocs(q);
+export default function Page() {
+  const [docs, setDocs] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    appCheckReadyPromise
+      .catch(() => false)
+      .then(() => {
+        if (cancelled) return;
+        const firestore = getFirestore();
+        const q = query(collection(firestore, "automata"));
+        return getDocs(q)
+          .then((snapshot) => !cancelled && setDocs(snapshot.docs))
+          .catch((err) => {
+            if (process.env.NODE_ENV === "development") {
+              console.error(err);
+            }
+          });
+      })
+      .finally(() => !cancelled && setLoading(false));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="max-w-6xl mx-auto my-7 px-4 bg-white">
       <div className="flex justify-between">
@@ -31,11 +54,9 @@ export default async function Page() {
         />
       </div>
       <div>
-        {(fas == undefined || fas.docs.length == 0) && (
-          <span>No Finite Automata</span>
-        )}
+        {!loading && docs.length === 0 && <span>No Finite Automata</span>}
         <ul>
-          {fas.docs.map((fa, index) => {
+          {docs.map((fa, index) => {
             return (
               <li key={index}>
                 <div className="w-full border shadow-black-400 shadow-lg my-3 flex p-5 rounded-md">
@@ -76,5 +97,3 @@ export default async function Page() {
     </div>
   );
 }
-
-export const revalidate = 0;

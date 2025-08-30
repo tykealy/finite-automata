@@ -1,5 +1,5 @@
 "use client";
-import "./../../../firebaseConfig";
+import { appCheckReadyPromise } from "./../../../firebaseConfig";
 import Link from "next/link";
 import React from "react";
 import checkDFAorNFA from "@/utils/CheckDFAorNFA";
@@ -21,6 +21,7 @@ export async function createFA(
   transitions,
   type
 ) {
+  await appCheckReadyPromise;
   const firestore = getFirestore();
   const c = collection(firestore, "automata");
   const doc1 = {
@@ -36,7 +37,9 @@ export async function createFA(
     const res = await addDoc(c, doc1);
     return res.id;
   } catch (error) {
-    console.log(error);
+    if (process.env.NODE_ENV === "development") {
+      console.error(error);
+    }
   }
 }
 
@@ -45,8 +48,8 @@ const Page = () => {
   const [faName, setFaName] = React.useState("");
   const [states, setStates] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
-  const [startState, setStartState] = React.useState();
-  const [endStates, setEndStates] = React.useState();
+  const [startState, setStartState] = React.useState("");
+  const [endStates, setEndStates] = React.useState([]);
   const [transitions, setTransitions] = React.useState({});
 
   const setTransitionState = (state, symbol, selectedStates, transitions) => {
@@ -168,7 +171,9 @@ const Page = () => {
                 end_states: endStates,
                 transitions: transitions,
               };
-              console.log(JSON.stringify(fa))
+              if (process.env.NODE_ENV === "development") {
+                console.log(JSON.stringify(fa));
+              }
             }}
           >
             SAVE
@@ -186,7 +191,7 @@ const Page = () => {
               </label>
               <input
                 required
-                value={states}
+                value={Array.isArray(states) ? states.join(",") : states || ""}
                 onChange={(e) => {
                   e.preventDefault();
                   handleStateArray(e.target.value);
@@ -206,7 +211,7 @@ const Page = () => {
               </label>
               <input
                 required
-                value={symbols}
+                value={Array.isArray(symbols) ? symbols.join(",") : symbols || ""}
                 onChange={(e) => {
                   e.preventDefault();
                   handleAlphabetArray(e.target.value);
